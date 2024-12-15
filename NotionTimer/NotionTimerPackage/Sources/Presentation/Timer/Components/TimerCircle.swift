@@ -27,16 +27,16 @@ struct TimerCircle: View {
     
     var body: some View {
         Circle()
-            .trim(from: self.trimFrom, to: self.trimTo)
+            .trim(from: trimFrom, to: trimTo)
             .stroke(
-                self.color,
+                color,
                 style: StrokeStyle(
-                    lineWidth: self.strokeWidth,
+                    lineWidth: strokeWidth,
                     lineCap: .butt,
                     lineJoin: .miter
                 )
             )
             .scaledToFit()
-            .padding(self.strokeWidth)
+            .padding(strokeWidth)
     }
 }

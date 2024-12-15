@@ -14,7 +14,7 @@ struct NotionAuthClient {
     public static func getAccessToken(temporaryToken: String) async throws -> String {
         let endPoint = "https://ft52ipjcsrdyyzviuos2pg6loi0ejzdv.lambda-url.ap-northeast-1.on.aws/"
         let headers: HTTPHeaders = ["Content-Type": "application/json"]
-        let requestBody = Self.GetAccessTokenRequestBody(code: temporaryToken)
+        let requestBody = GetAccessTokenRequestBody(code: temporaryToken)
         
         do {
             let response = try await AF.request(

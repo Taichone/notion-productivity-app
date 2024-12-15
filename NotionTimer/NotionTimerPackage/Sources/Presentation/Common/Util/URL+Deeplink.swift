@@ -13,9 +13,9 @@ public extension URL {
     }
     
     func getDeeplink() -> Deeplink? {
-        guard self.scheme == "notion-timer",
-              let host = self.host,
-              let queryUrlComponents = URLComponents(string: self.absoluteString) else {
+        guard scheme == "notion-timer",
+              let host = host,
+              let queryUrlComponents = URLComponents(string: absoluteString) else {
             return nil
         }
         
@@ -34,6 +34,6 @@ public extension URL {
 
 extension URLComponents {
     func getParameterValue(for parameter: String) -> String? {
-        self.queryItems?.first(where: { $0.name == parameter })?.value
+        queryItems?.first(where: { $0.name == parameter })?.value
     }
 }

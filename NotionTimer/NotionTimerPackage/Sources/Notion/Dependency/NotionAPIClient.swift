@@ -245,30 +245,30 @@ extension NotionAPIClient {
 
 extension Database {
     var asDatabaseEntity: NotionDatabase? {
-        guard let title = self.title.first,
+        guard let title = title.first,
               case .text(let richTextType) = title.type else {
             return nil
         }
-        return .init(id: self.id.rawValue, title: richTextType.content)
+        return .init(id: id.rawValue, title: richTextType.content)
     }
 }
 
 extension Page {
     var asPageEntity: NotionPage? {
-        guard let title = self.getTitle()?.first,
+        guard let title = getTitle()?.first,
               case .text(let richTextType) = title.type else {
             return nil
         }
-        return .init(id: self.id.rawValue, title: richTextType.content)
+        return .init(id: id.rawValue, title: richTextType.content)
     }
     
     var asRecordEntity: Record? {
-        guard case .richText(let richTexts) = self.properties["Description"]?.type,
+        guard case .richText(let richTexts) = properties["Description"]?.type,
               case .text(let textValue) = richTexts.first?.type,
-              case .date(let dateRange) = self.properties["Date"]?.type,
+              case .date(let dateRange) = properties["Date"]?.type,
               case .dateAndTime(let date) = dateRange?.start,
-              case .multiSelect(let multiSelectValue) = self.properties["Tag"]?.type,
-              case .number(let decimalTime) = self.properties["Time"]?.type,
+              case .multiSelect(let multiSelectValue) = properties["Tag"]?.type,
+              case .number(let decimalTime) = properties["Time"]?.type,
               let decimalTime = decimalTime else {
             return nil
         }
@@ -284,7 +284,7 @@ extension Page {
         }
         
         return .init(
-            id: self.id.rawValue,
+            id: id.rawValue,
             date: date,
             description: description,
             tags: tags,

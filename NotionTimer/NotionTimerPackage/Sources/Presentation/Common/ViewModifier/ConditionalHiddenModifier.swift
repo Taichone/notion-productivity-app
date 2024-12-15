@@ -11,7 +11,7 @@ struct ConditionalHiddenModifier: ViewModifier {
     var hidden: Bool
 
     func body(content: Content) -> some View {
-        if self.hidden {
+        if hidden {
             content
                 .hidden()
         } else {
@@ -22,6 +22,6 @@ struct ConditionalHiddenModifier: ViewModifier {
 
 extension View {
     public func hidden(_ hidden: Bool) -> some View {
-        self.modifier(ConditionalHiddenModifier(hidden: hidden))
+        modifier(ConditionalHiddenModifier(hidden: hidden))
     }
 }
