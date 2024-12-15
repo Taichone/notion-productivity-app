@@ -15,7 +15,7 @@ public final class TimerService: ObservableObject {
     let isManualBreakStartEnabled: Bool
     let focusTimeSec: Int
     let breakTimeSec: Int
-    let screenTimeClient: ScreenTimeClient // TODO: ScreenTimeService を作成し分離
+    let screenTimeClient: ScreenTimeClient
     let restrictedApps: Set<ApplicationToken>?
     
     // Timer status
