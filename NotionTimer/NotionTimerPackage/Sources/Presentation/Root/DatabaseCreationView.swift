@@ -119,7 +119,8 @@ struct DatabaseCreationView: View {
         DatabaseCreationView()
             .environment(NotionService(
                 keychainClient: .testValue,
-                notionClient: .testValue
+                notionClient: .testValue,
+                notionAuthClient: .testValue
             ))
     }
 }

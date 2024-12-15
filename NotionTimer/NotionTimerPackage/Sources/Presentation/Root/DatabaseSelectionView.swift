@@ -109,7 +109,8 @@ extension DatabaseSelectionView {
         DatabaseSelectionView()
             .environment(NotionService(
                 keychainClient: .testValue,
-                notionClient: .testValue
+                notionClient: .testValue,
+                notionAuthClient: .testValue
             ))
     }
 }

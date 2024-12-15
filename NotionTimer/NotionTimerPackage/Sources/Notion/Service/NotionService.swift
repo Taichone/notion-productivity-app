@@ -33,6 +33,7 @@ public enum NotionServiceError: Error {
 @MainActor @Observable public final class NotionService {
     private let keychainClient: KeychainClient
     private let notionClient: NotionAPIClient
+    private let notionAuthClient: NotionAuthClient
     
     private var accessToken: String? {
         keychainClient.retrieveToken(.notionAccessToken)
@@ -45,17 +46,19 @@ public enum NotionServiceError: Error {
     
     public init(
         keychainClient: KeychainClient,
-        notionClient: NotionAPIClient
+        notionClient: NotionAPIClient,
+        notionAuthClient: NotionAuthClient
     ) {
         self.keychainClient = keychainClient
         self.notionClient = notionClient
+        self.notionAuthClient = notionAuthClient
     }
     
     public func fetchAccessToken(temporaryToken: String) async throws {
         authStatus = .loading
         
         do {
-            let accessToken = try await NotionAuthClient.getAccessToken(temporaryToken: temporaryToken)
+            let accessToken = try await notionAuthClient.getAccessToken(temporaryToken)
             
             guard keychainClient.saveToken(accessToken, .notionAccessToken) else {
                 throw NotionServiceError.failedToSaveToKeychain

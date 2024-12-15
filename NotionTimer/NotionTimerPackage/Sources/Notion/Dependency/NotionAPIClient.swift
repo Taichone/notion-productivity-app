@@ -22,12 +22,12 @@ public struct NotionAPIClient: DependencyClient {
     public var getAllRecords: @Sendable (String, String) async throws -> [Record]
     
     public static let liveValue = Self(
-        getPageList: { try await getPageList(token: $0) },
-        getCompatibleDatabaseList: { try await getCompatibleDatabaseList(token: $0) },
-        createDatabaseAndGetDatabaseID: { try await createDatabaseAndGetDatabaseID(token: $0, parentPageID: $1, title: $2) },
-        record: { try await record(token: $0, date: $1, time: $2, tags: $3, description: $4, databaseID: $5) },
-        getDatabaseTags: { try await getDatabaseTags(token: $0, databaseID: $1) },
-        getAllRecords: { try await getAllRecords(token: $0, databaseID: $1) }
+        getPageList: getPageList,
+        getCompatibleDatabaseList: getCompatibleDatabaseList,
+        createDatabaseAndGetDatabaseID: createDatabaseAndGetDatabaseID,
+        record: record,
+        getDatabaseTags: getDatabaseTags,
+        getAllRecords: getAllRecords
     )
     
     public static let testValue = Self(

@@ -24,9 +24,9 @@ public struct KeychainClient: DependencyClient {
     public var deleteToken: @Sendable  (TokenType) -> Bool
     
     public static let liveValue = Self(
-        saveToken: { return saveToken(token: $0, type: $1) },
-        retrieveToken: { return retrieveToken(for: $0.rawValue) },
-        deleteToken: { return delete(for: $0.rawValue) }
+        saveToken: saveToken,
+        retrieveToken: { retrieveToken(for: $0.rawValue) },
+        deleteToken: { delete(for: $0.rawValue) }
     )
     
     public static let testValue = Self(

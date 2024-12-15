@@ -11,7 +11,7 @@ import ManagedSettings
 extension FamilyActivitySelection: @retroactive @unchecked Sendable {}
 extension ManagedSettingsStore: @retroactive @unchecked Sendable {}
 
-public typealias AppToken = ApplicationToken
+public typealias AppSelection = FamilyActivitySelection
 
 protocol DependencyClient: Sendable {
     static var liveValue: Self { get }
@@ -19,15 +19,14 @@ protocol DependencyClient: Sendable {
 }
 
 public struct ScreenTimeClient: DependencyClient {
-    public static let appSelection = FamilyActivitySelection() // FamilyActivityPicker 用
     public var authorize: @Sendable () async throws -> Void
-    public var startAppRestriction: @Sendable (Set<ApplicationToken>?) -> Void
+    public var startAppRestriction: @Sendable (AppSelection) -> Void
     public var stopAppRestriction: @Sendable () -> Void
     
     public static let liveValue = Self(
-        authorize: { try await authorize() },
-        startAppRestriction: { startAppRestriction(apps: $0) },
-        stopAppRestriction: { stopAppRestriction() }
+        authorize: authorize,
+        startAppRestriction: startAppRestriction,
+        stopAppRestriction: stopAppRestriction
     )
     
     public static let testValue = Self(
@@ -38,17 +37,25 @@ public struct ScreenTimeClient: DependencyClient {
 }
 
 extension ScreenTimeClient {
-    private static let store = ManagedSettingsStore()
+    public static let familyActivitySelection = FamilyActivitySelection() // FamilyActivityPicker 用
+}
+
+extension ScreenTimeClient {
+    static let store = ManagedSettingsStore()
     
     static func authorize() async throws {
         try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
     }
     
-    static func startAppRestriction(apps: Set<ApplicationToken>?) {
-        store.shield.applications = apps
+    static func startAppRestriction(selection: AppSelection) {
+        store.application.denyAppRemoval = true
+        store.shield.applicationCategories = .specific(selection.categoryTokens)
+        store.shield.applications = selection.applicationTokens
     }
 
     static func stopAppRestriction() {
         store.shield.applications = nil
+        store.shield.applicationCategories = nil
+        store.clearAllSettings()
     }
 }

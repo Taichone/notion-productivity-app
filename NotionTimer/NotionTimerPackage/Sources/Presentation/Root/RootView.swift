@@ -11,7 +11,8 @@ import Notion
 public struct RootView: View {
     @State private var notionService = NotionService(
         keychainClient: .liveValue,
-        notionClient: .liveValue
+        notionClient: .liveValue,
+        notionAuthClient: .liveValue
     )
     
     public init() {}

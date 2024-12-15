@@ -40,7 +40,7 @@ struct TimerSettingView: View {
     
     // Screen Time
     @State private var isFamilyActivityPickerPresented = false
-    @State private var restrictedApps = ScreenTimeClient.appSelection
+    @State private var appSelection = ScreenTimeClient.familyActivitySelection
     private let screenTimeClient = ScreenTimeClient.liveValue
     
     init() {}
@@ -100,7 +100,7 @@ struct TimerSettingView: View {
                         breakTimeSec: breakTimeSec,
                         focusColor: focusColor,
                         breakColor: breakColor,
-                        restrictedApps: restrictedApps.applicationTokens
+                        appSelection: appSelection
                     )))
                 } label: {
                     Text(String(moduleLocalized: "ok"))
@@ -109,7 +109,7 @@ struct TimerSettingView: View {
         }
         .familyActivityPicker(
             isPresented: $isFamilyActivityPickerPresented,
-            selection: $restrictedApps
+            selection: $appSelection
         )
         .task {
             screenTimeClient.stopAppRestriction()

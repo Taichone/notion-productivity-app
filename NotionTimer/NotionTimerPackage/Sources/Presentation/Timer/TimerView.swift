@@ -26,7 +26,7 @@ struct TimerView: View {
             focusTimeSec: dependency.focusTimeSec,
             breakTimeSec: dependency.breakTimeSec,
             screenTimeClient: ScreenTimeClient.liveValue,
-            restrictedApps: dependency.restrictedApps
+            appSelection: dependency.appSelection
         ))
     }
     
@@ -182,7 +182,7 @@ extension TimerView {
         let breakTimeSec: Int
         let focusColor: Color
         let breakColor: Color
-        let restrictedApps: Set<AppToken>?
+        let appSelection: AppSelection?
     }
 }
 
@@ -195,7 +195,7 @@ extension TimerView {
             breakTimeSec: 300,
             focusColor: .mint,
             breakColor: .pink,
-            restrictedApps: nil
+            appSelection: nil
         ))
     }
 }

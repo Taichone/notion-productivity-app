@@ -1,7 +1,19 @@
 import Foundation
 import Alamofire
 
-struct NotionAuthClient {
+public struct NotionAuthClient: DependencyClient {
+    public var getAccessToken: @Sendable (String) async throws -> String
+    
+    public static let liveValue = Self(
+        getAccessToken: getAccessToken
+    )
+    
+    public static let testValue = Self(
+        getAccessToken: { _ in "" }
+    )
+}
+
+extension NotionAuthClient {
     private struct GetAccessTokenRequestBody: Encodable {
         let code: String
     }
@@ -11,7 +23,7 @@ struct NotionAuthClient {
     }
     
     /// temporaryToken から accessToken を取得
-    public static func getAccessToken(temporaryToken: String) async throws -> String {
+    private static func getAccessToken(temporaryToken: String) async throws -> String {
         let endPoint = "https://ft52ipjcsrdyyzviuos2pg6loi0ejzdv.lambda-url.ap-northeast-1.on.aws/"
         let headers: HTTPHeaders = ["Content-Type": "application/json"]
         let requestBody = GetAccessTokenRequestBody(code: temporaryToken)
