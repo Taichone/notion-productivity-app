@@ -1,5 +1,7 @@
 import Testing
 @testable import Presentation
+@testable import Timer
+@testable import ScreenTime
 
 @MainActor
 struct TimerServiceTests {
@@ -7,7 +9,9 @@ struct TimerServiceTests {
         return .init(
             isManualBreakStartEnabled: isManualBreakStartEnabled,
             focusTimeSec: 0,
-            breakTimeSec: 0
+            breakTimeSec: 0,
+            screenTimeClient: ScreenTimeClient.testValue,
+            restrictedApps: nil
         )
     }
     
