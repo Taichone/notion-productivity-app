@@ -81,7 +81,9 @@ struct TimerSettingView: View {
             }
             
             Button {
-                isFamilyActivityPickerPresented = true
+                Task {
+                    await tryShowFamilyActivityPicker()
+                }
             } label: {
                 Text(String(moduleLocalized: "select-apps-to-restrict"))
             }
@@ -132,6 +134,13 @@ extension TimerSettingView {
     
     private var breakTimeString: String {
         "\(breakTimeSec / 60):\(String(format: "%02d", breakTimeSec % 60))"
+    }
+    
+    private func tryShowFamilyActivityPicker() async {
+        do {
+            try await screenTimeClient.authorize()
+            isFamilyActivityPickerPresented = true
+        } catch {} // 認証するまで何度でも認証画面を開けるのでハンドリング不要
     }
 }
 
