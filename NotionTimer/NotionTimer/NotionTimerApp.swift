@@ -16,3 +16,7 @@ struct NotionTimerApp: App {
         }
     }
 }
+
+fileprivate struct PreferredLanguageSettingValidator {
+    fileprivate let language = String(localized: "language")
+}

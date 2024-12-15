@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5210CDEB2D0EA9DD0071B052 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5210CDEA2D0EA9DD0071B052 /* Localizable.xcstrings */; };
 		528559EC2CC51FA7000E5390 /* NotionTimerPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 528559EB2CC51FA7000E5390 /* NotionTimerPackage */; };
 		5297A5482C66819D001C243E /* NotionTimerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5297A5472C66819D001C243E /* NotionTimerApp.swift */; };
 		5297A54C2C66819E001C243E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5297A54B2C66819E001C243E /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5210CDEA2D0EA9DD0071B052 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		525174E12CBD05E8006C241E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		52950C332C72603C00D62CD0 /* NotionTimer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotionTimer.entitlements; sourceTree = "<group>"; };
 		5297A5442C66819D001C243E /* NotionTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NotionTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +84,7 @@
 			children = (
 				5297A54D2C66819E001C243E /* Preview Content */,
 				5297A54B2C66819E001C243E /* Assets.xcassets */,
+				5210CDEA2D0EA9DD0071B052 /* Localizable.xcstrings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -130,7 +133,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 				ja,
 			);
 			mainGroup = 5297A53B2C66819D001C243E;
@@ -152,6 +154,7 @@
 			files = (
 				5297A54F2C66819E001C243E /* Preview Assets.xcassets in Resources */,
 				5297A54C2C66819E001C243E /* Assets.xcassets in Resources */,
+				5210CDEB2D0EA9DD0071B052 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +232,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -286,6 +290,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
