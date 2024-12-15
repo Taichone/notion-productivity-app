@@ -11,14 +11,15 @@ import ManagedSettings
 extension FamilyActivitySelection: @retroactive @unchecked Sendable {}
 extension ManagedSettingsStore: @retroactive @unchecked Sendable {}
 
+public typealias AppToken = ApplicationToken
+
 protocol DependencyClient: Sendable {
     static var liveValue: Self { get }
     static var testValue: Self { get }
 }
 
 public struct ScreenTimeClient: DependencyClient {
-    public static let appSelection = FamilyActivitySelection()
-    
+    public static let appSelection = FamilyActivitySelection() // FamilyActivityPicker 用
     public var authorize: @Sendable () async throws -> Void
     public var startAppRestriction: @Sendable (Set<ApplicationToken>?) -> Void
     public var stopAppRestriction: @Sendable () -> Void

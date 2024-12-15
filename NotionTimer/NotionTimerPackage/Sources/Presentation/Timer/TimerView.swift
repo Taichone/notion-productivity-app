@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import ManagedSettings
 import Timer
 import ScreenTime
 
@@ -183,7 +182,7 @@ extension TimerView {
         let breakTimeSec: Int
         let focusColor: Color
         let breakColor: Color
-        let restrictedApps: Set<ApplicationToken>?
+        let restrictedApps: Set<AppToken>?
     }
 }
 

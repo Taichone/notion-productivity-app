@@ -5,7 +5,6 @@
 //  Created by Taichi on 2024/08/16
 
 import Foundation
-import ManagedSettings // TODO: これも ScreenTime に隠蔽したい（Set<ApplicationToken>? を ScreenTime.Xxx? のように）
 import ScreenTime
 
 // TODO: Observable を積極検討
@@ -16,7 +15,7 @@ public final class TimerService: ObservableObject {
     let focusTimeSec: Int
     let breakTimeSec: Int
     let screenTimeClient: ScreenTimeClient
-    let restrictedApps: Set<ApplicationToken>?
+    let restrictedApps: Set<AppToken>?
     
     // Timer status
     var timer: Timer?
@@ -31,7 +30,7 @@ public final class TimerService: ObservableObject {
         focusTimeSec: Int,
         breakTimeSec: Int,
         screenTimeClient: ScreenTimeClient,
-        restrictedApps: Set<ApplicationToken>? = nil
+        restrictedApps: Set<AppToken>? = nil
     ) {
         self.isManualBreakStartEnabled = isManualBreakStartEnabled
         self.focusTimeSec = focusTimeSec
