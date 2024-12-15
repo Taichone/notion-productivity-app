@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct NotionDatabase: Sendable, Hashable {
+public struct NotionDatabase: Sendable, Hashable, Identifiable {
     public let id: String
     public let title: String
     

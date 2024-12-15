@@ -25,8 +25,7 @@ struct TimerView: View {
             isManualBreakStartEnabled: dependency.isManualBreakStartEnabled,
             focusTimeSec: dependency.focusTimeSec,
             breakTimeSec: dependency.breakTimeSec,
-            screenTimeClient: ScreenTimeClient.liveValue,
-            appSelection: dependency.appSelection
+            screenTimeClient: ScreenTimeClient.liveValue
         ))
     }
     
@@ -182,7 +181,6 @@ extension TimerView {
         let breakTimeSec: Int
         let focusColor: Color
         let breakColor: Color
-        let appSelection: AppSelection?
     }
 }
 
@@ -194,8 +192,7 @@ extension TimerView {
             focusTimeSec: 1500,
             breakTimeSec: 300,
             focusColor: .mint,
-            breakColor: .pink,
-            appSelection: nil
+            breakColor: .pink
         ))
     }
 }

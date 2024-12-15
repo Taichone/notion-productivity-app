@@ -37,10 +37,6 @@ public struct ScreenTimeClient: DependencyClient {
 }
 
 extension ScreenTimeClient {
-    public static let familyActivitySelection = FamilyActivitySelection() // FamilyActivityPicker 用
-}
-
-extension ScreenTimeClient {
     static let store = ManagedSettingsStore()
     
     static func authorize() async throws {
