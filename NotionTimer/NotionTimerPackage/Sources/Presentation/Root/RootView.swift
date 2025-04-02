@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import Notion
+import DataLayer
+import Domain
 
 public struct RootView: View {
     @State private var notionService = NotionService(

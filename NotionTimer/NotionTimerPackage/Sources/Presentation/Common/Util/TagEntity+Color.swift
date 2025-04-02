@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Notion
+import DataLayer
 
 extension NotionTag.Color {
     var color: SwiftUI.Color {

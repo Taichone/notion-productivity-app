@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import Notion
+import DataLayer
+import Domain
 
 struct DatabaseSelectionView: View {
     @Environment(NotionService.self) private var notionService: NotionService

@@ -9,26 +9,6 @@ import Foundation
 import Observation
 import DataLayer
 
-public enum NotionAuthStatus {
-    case loading
-    case invalidToken
-    case invalidDatabase
-    case complete
-}
-
-public enum NotionServiceError: Error {
-    case failedToSaveToKeychain
-    case failedToRetrieveTokenFromKeychain
-    case failedToFetchAccessToken
-    case accessTokenNotFound
-    case invalidClient
-    case invalidDatabase
-    case failedToGetPageList(error: Error)
-    case failedToGetRecordList(error: Error)
-    case failedToGetDatabaseList(error: Error)
-    case failedToCreateDatabase(error: Error)
-}
-
 // TODO: NotionAuthService を作り認証周りを抜き出すことを検討
 @MainActor @Observable public final class NotionService {
     private let keychainClient: KeychainClient

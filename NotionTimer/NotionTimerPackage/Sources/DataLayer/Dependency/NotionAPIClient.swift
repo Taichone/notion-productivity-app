@@ -8,11 +8,6 @@
 import Foundation
 @preconcurrency import NotionSwift
 
-public protocol DependencyClient: Sendable {
-    static var liveValue: Self { get }
-    static var testValue: Self { get }
-}
-
 public struct NotionAPIClient: DependencyClient {
     public var getPageList: @Sendable (String) async throws -> [NotionPage]
     public var getCompatibleDatabaseList: @Sendable (String) async throws -> [NotionDatabase]

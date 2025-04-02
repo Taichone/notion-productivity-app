@@ -7,7 +7,8 @@
 
 import SwiftUI
 import Charts
-import Notion
+import DataLayer
+import Domain
 
 struct RecordDisplayView: View {
     @Environment(NotionService.self) private var notionService

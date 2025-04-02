@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import Notion
+import DataLayer
+import Domain
 
 final class NavigationRouter: ObservableObject {
     @MainActor @Published var items: [Item] = []

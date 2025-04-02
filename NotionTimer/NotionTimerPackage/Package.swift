@@ -18,23 +18,24 @@ let package = Package(
         .package(url: "https://github.com/chojnac/NotionSwift.git", .upToNextMajor(from: "0.9.0")),
     ],
     targets: [
+        // MARK: Targets
         .target(
-            name: "Notion",
+            name: "DataLayer",
             dependencies: [
-                "DataLayer",
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "NotionSwift", package: "NotionSwift")
             ]
         ),
         .target(
-            name: "DataLayer"),
-        .target(
             name: "Domain",
-            dependencies: ["DataLayer"]
+            dependencies: [
+                "DataLayer",
+                .product(name: "NotionSwift", package: "NotionSwift")
+            ]
         ),
         .target(
             name: "Presentation",
-            dependencies: ["Notion", "Timer", "DataLayer", "Domain"],
+            dependencies: ["DataLayer", "Domain", "Timer"],
             resources: [
                 .process("Resources/Localizable.xcstrings")
             ]
@@ -43,13 +44,15 @@ let package = Package(
             name: "Timer",
             dependencies: ["DataLayer", "Domain"]
         ),
+        
+        // MARK: TestTargets
         .testTarget(
             name: "PresentationTests",
             dependencies: ["Presentation"]
         ),
         .testTarget(
             name: "NotionTests",
-            dependencies: ["Notion"]
+            dependencies: ["Domain"]
         ),
     ]
 )
