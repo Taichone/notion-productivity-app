@@ -6,10 +6,10 @@
 
 import Foundation
 import DataLayer
+import Observation
 
 // TODO: Observable を積極検討
-@MainActor
-public final class TimerService: ObservableObject {
+@MainActor @Observable public final class TimerViewModel {
     // Dependency
     let isManualBreakStartEnabled: Bool
     let focusTimeSec: Int
@@ -19,11 +19,11 @@ public final class TimerService: ObservableObject {
     
     // Timer status
     var timer: Timer?
-    @Published public var timerMode: Mode
-    @Published public var maxTimeSec: Int = 0
-    @Published public var remainingTimeSec: Int = 0
-    @Published public var isRunning = false
-    @Published public var totalFocusTimeSec: Int = 0
+    public var timerMode: Mode
+    public var maxTimeSec: Int = 0
+    public var remainingTimeSec: Int = 0
+    public var isRunning = false
+    public var totalFocusTimeSec: Int = 0
     
     public init(
         isManualBreakStartEnabled: Bool,
@@ -45,7 +45,7 @@ public final class TimerService: ObservableObject {
     }
 }
 
-extension TimerService {
+extension TimerViewModel {
     public func tapPlayButton() {
         isRunning ? stopTimer() : startTimer()
     }
@@ -70,7 +70,7 @@ extension TimerService {
     }
 }
 
-extension TimerService {
+extension TimerViewModel {
     func endAdditionalFocusAndStartBreak() {
         stopTimer()
         changeToBreakMode()
@@ -144,7 +144,7 @@ extension TimerService {
     }
 }
 
-extension TimerService {
+extension TimerViewModel {
     public enum Mode {
         case focusMode
         case breakMode

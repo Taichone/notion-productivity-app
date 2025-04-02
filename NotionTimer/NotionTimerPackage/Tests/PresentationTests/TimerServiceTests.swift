@@ -5,7 +5,7 @@ import Testing
 
 @MainActor
 struct TimerServiceTests {
-    func service(isManualBreakStartEnabled: Bool = true) -> TimerService {
+    func service(isManualBreakStartEnabled: Bool = true) -> TimerViewModel {
         return .init(
             isManualBreakStartEnabled: isManualBreakStartEnabled,
             focusTimeSec: 0,
