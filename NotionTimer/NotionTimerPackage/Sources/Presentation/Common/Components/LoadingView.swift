@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommonLoadingView: View {
-    public let label: String?
+    let label: String?
     
     init(label: String? = nil) {
         self.label = label

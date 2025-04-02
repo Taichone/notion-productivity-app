@@ -7,8 +7,8 @@
 
 import UIKit.UIImpactFeedbackGenerator
 
-public struct ExternalOutput {
-    @MainActor public static func tapticFeedback() {
+struct ExternalOutput {
+    @MainActor static func tapticFeedback() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 }

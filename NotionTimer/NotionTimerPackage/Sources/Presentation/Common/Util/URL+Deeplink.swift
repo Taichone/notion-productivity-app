@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension URL {
+extension URL {
     enum Deeplink {
         case notionTemporaryToken(token: String)
     }

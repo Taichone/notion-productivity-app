@@ -14,6 +14,7 @@
 
     },
     "additional-focus-mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -29,6 +30,9 @@
         }
       }
     },
+    "appearance-settings" : {
+
+    },
     "authorize-notion" : {
       "localizations" : {
         "ja" : {
@@ -40,6 +44,7 @@
       }
     },
     "break-mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -215,6 +220,7 @@
       }
     },
     "focus-mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
