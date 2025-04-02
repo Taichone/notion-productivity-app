@@ -53,3 +53,5 @@ xcuserdata/
 
 ## Firebase
 GoogleService-Info.plist
+NotionTimer/NotionTimerPackage/.env
+NotionTimer/NotionTimer.xcodeproj/xcshareddata/xcschemes/NotionTimer.xcscheme

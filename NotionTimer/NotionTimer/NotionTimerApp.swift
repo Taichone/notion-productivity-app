@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Root
+import Presentation
 
 @main
 struct NotionTimerApp: App {
@@ -15,4 +15,8 @@ struct NotionTimerApp: App {
             RootView()
         }
     }
+}
+
+fileprivate struct PreferredLanguageSettingValidator {
+    fileprivate let language = String(localized: "language")
 }
