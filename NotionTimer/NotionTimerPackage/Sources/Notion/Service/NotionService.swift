@@ -7,7 +7,7 @@
 
 import Foundation
 import Observation
-import Keychain
+import DataLayer
 
 public enum NotionAuthStatus {
     case loading

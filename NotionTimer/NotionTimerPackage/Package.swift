@@ -19,20 +19,22 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Keychain",
-            dependencies: []
-        ),
-        .target(
             name: "Notion",
             dependencies: [
-                "Keychain",
+                "DataLayer",
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "NotionSwift", package: "NotionSwift")
             ]
         ),
         .target(
+            name: "DataLayer"),
+        .target(
+            name: "Domain",
+            dependencies: ["DataLayer"]
+        ),
+        .target(
             name: "Presentation",
-            dependencies: ["ScreenTime", "Notion", "Keychain", "Timer"],
+            dependencies: ["ScreenTime", "Notion", "Timer", "DataLayer", "Domain"],
             resources: [
                 .process("Resources/Localizable.xcstrings")
             ]
