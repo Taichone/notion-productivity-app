@@ -7,6 +7,7 @@
 import Foundation
 import DataLayer
 import Observation
+import SwiftUI
 
 // TODO: Observable を積極検討
 @MainActor @Observable public final class TimerViewModel {
@@ -24,6 +25,47 @@ import Observation
     public var remainingTimeSec: Int = 0
     public var isRunning = false
     public var totalFocusTimeSec: Int = 0
+    
+    // UI related properties
+    public var modeColor: Color {
+        timerMode == .focusMode ? .mint : .pink
+    }
+    
+    public var trimTo: CGFloat {
+        timerMode == .breakMode ? CGFloat(1 - (CGFloat(remainingTimeSec) / CGFloat(maxTimeSec))) : 1
+    }
+    
+    public var trimFrom: CGFloat {
+        timerMode == .breakMode ? 0 : CGFloat(1 - (CGFloat(remainingTimeSec) / CGFloat(maxTimeSec)))
+    }
+    
+    public var remainingTimeString: String {
+        "\(remainingTimeSec / 60):\(String(format: "%02d", remainingTimeSec % 60))"
+    }
+    
+    public var totalFocusTimeString: String {
+        "\(totalFocusTimeSec / 60):\(String(format: "%02d", totalFocusTimeSec % 60))"
+    }
+    
+    public var timerButtonSystemName: String {
+        isRunning ? "pause.fill" : "play.fill"
+    }
+    
+    public var startBreakButtonDisabled: Bool {
+        timerMode != .additionalFocusMode
+    }
+    
+    public var totalFocusTimeDisplayColor: Color {
+        timerMode == .additionalFocusMode ? .mint : Color(.label)
+    }
+    
+    public var timerModeName: String {
+        switch timerMode {
+        case .focusMode: "focus-mode"
+        case .breakMode: "break-mode"
+        case .additionalFocusMode: "additional-focus-mode"
+        }
+    }
     
     public init(
         isManualBreakStartEnabled: Bool,

@@ -32,7 +32,7 @@ struct TimerView: View {
         VStack {
             VStack(alignment: .leading) {
                 HStack {
-                    Text(timerModeName)
+                    Text(viewModel.timerModeName)
                 }
                 
                 Divider()
@@ -40,7 +40,7 @@ struct TimerView: View {
                 HStack {
                     Text(String(moduleLocalized: "remaining-time"))
                     Spacer()
-                    Text(remainingTimeString)
+                    Text(viewModel.remainingTimeString)
                 }
                 
                 Divider()
@@ -48,7 +48,7 @@ struct TimerView: View {
                 HStack {
                     Text(String(moduleLocalized: "total-focus-time"))
                     Spacer()
-                    Text(totalFocusTimeString)
+                    Text(viewModel.totalFocusTimeString)
                 }
             }
             .padding()
@@ -61,12 +61,12 @@ struct TimerView: View {
             ZStack {
                 TimerCircle(color: Color(.secondarySystemBackground))
                 TimerCircle(
-                    color: modeColor,
-                    trimFrom: trimFrom,
-                    trimTo: trimTo
+                    color: viewModel.modeColor,
+                    trimFrom: viewModel.trimFrom,
+                    trimTo: viewModel.trimTo
                 )
-                .animation(.smooth, value: trimFrom)
-                .animation(.smooth, value: trimTo)
+                .animation(.smooth, value: viewModel.trimFrom)
+                .animation(.smooth, value: viewModel.trimTo)
                 .rotationEffect(Angle(degrees: -90))
                 .shadow(radius: 10)
             }
@@ -79,13 +79,13 @@ struct TimerView: View {
             } label: {
                 Text(String(moduleLocalized: "start-break")).bold()
             }
-            .hidden(startBreakButtonDisabled)
+            .hidden(viewModel.startBreakButtonDisabled)
             
             Button {
                 ExternalOutput.tapticFeedback()
                 viewModel.tapPlayButton()
             } label: {
-                Image(systemName: timerButtonSystemName)
+                Image(systemName: viewModel.timerButtonSystemName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 50)
@@ -115,7 +115,6 @@ struct TimerView: View {
                     router.items.append(.timerRecord(dependency: .init(
                         resultFocusTimeSec: viewModel.totalFocusTimeSec
                     )))
-                    
                     viewModel.terminate()
                     
                 } label: {
@@ -125,49 +124,6 @@ struct TimerView: View {
         }
         .onAppear {
             viewModel.onAppear()
-        }
-    }
-}
-
-// MARK: - computed properties
-extension TimerView {
-    private var modeColor: Color {
-        viewModel.timerMode == .focusMode ? focusColor : breakColor
-    }
-    
-    private var trimTo: CGFloat {
-        viewModel.timerMode == .breakMode ? CGFloat(1 - (CGFloat(viewModel.remainingTimeSec) / CGFloat(viewModel.maxTimeSec))) : 1
-    }
-    
-    private var trimFrom: CGFloat {
-        viewModel.timerMode == .breakMode ? 0 : CGFloat(1 - (CGFloat(viewModel.remainingTimeSec) / CGFloat(viewModel.maxTimeSec)))
-    }
-    
-    private var remainingTimeString: String {
-        "\(viewModel.remainingTimeSec / 60):\(String(format: "%02d", viewModel.remainingTimeSec % 60))"
-    }
-    
-    private var totalFocusTimeString: String {
-        "\(viewModel.totalFocusTimeSec / 60):\(String(format: "%02d", viewModel.totalFocusTimeSec % 60))"
-    }
-    
-    private var timerButtonSystemName: String {
-        viewModel.isRunning ? "pause.fill" : "play.fill"
-    }
-    
-    private var startBreakButtonDisabled: Bool {
-        viewModel.timerMode != .additionalFocusMode
-    }
-    
-    private var totalFocusTimeDisplayColor: Color {
-        viewModel.timerMode == .additionalFocusMode ? focusColor : Color(.label)
-    }
-    
-    private var timerModeName: String {
-        switch viewModel.timerMode {
-        case .focusMode: String(moduleLocalized: "focus-mode")
-        case .breakMode: String(moduleLocalized: "break-mode")
-        case .additionalFocusMode: String(moduleLocalized: "additional-focus-mode")
         }
     }
 }
