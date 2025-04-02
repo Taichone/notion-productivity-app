@@ -11,8 +11,7 @@ struct TimerServiceTests {
             isManualBreakStartEnabled: isManualBreakStartEnabled,
             focusTimeSec: 0,
             breakTimeSec: 0,
-            screenTimeClient: ScreenTimeClient.testValue,
-            restrictedApps: nil
+            screenTimeClient: ScreenTimeClient.testValue
         )
     }
     
