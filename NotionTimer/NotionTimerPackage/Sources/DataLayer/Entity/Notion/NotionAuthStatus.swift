@@ -5,7 +5,7 @@
 //  Created by Taichi on 2025/04/02.
 //
 
-public enum NotionAuthStatus {
+public enum NotionAuthStatus: Sendable {
     case loading
     case invalidToken
     case invalidDatabase

@@ -24,6 +24,7 @@ final class NavigationRouter: ObservableObject {
 
 struct HomeView: View {
     @Environment(\.appDependencies) var appDependencies
+    @Environment(\.appServices) var appServices
     @StateObject private var router: NavigationRouter = .init()
     
     init() {}
@@ -32,7 +33,7 @@ struct HomeView: View {
         NavigationStack(path: $router.items) {
             List {
                 Section(String(moduleLocalized: "record-display-header")) {
-                    RecordDisplayView()
+                    RecordDisplayView(notionService: appServices.notionService)
                 }
                 
                 Section(String(moduleLocalized: "timer-button-header")) {
@@ -47,7 +48,7 @@ struct HomeView: View {
             .navigationDestination(for: NavigationRouter.Item.self) { item in
                 switch item {
                 case .setting:
-                    SettingView()
+                    SettingView(notionService: appServices.notionService)
                         .environmentObject(router)
                 case .timerSetting:
                     TimerSettingView(screenTimeClient: appDependencies.screenTimeClient)
@@ -56,7 +57,7 @@ struct HomeView: View {
                     TimerView(dependency: dependency)
                         .environmentObject(router)
                 case .timerRecord(let dependency):
-                    RecordView(dependency: dependency)
+                    RecordView(dependency: dependency, notionService: appServices.notionService)
                         .environmentObject(router)
                 }
             }

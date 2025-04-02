@@ -10,7 +10,9 @@ import DataLayer
 import Domain
 
 struct DatabaseSelectionView: View {
-    @Environment(NotionService.self) private var notionService: NotionService
+    let notionService: NotionService
+    
+    @Environment(\.appServices) var appServices
     @State private var isLoading = true
     @State private var databases: [NotionDatabase] = []
     @State private var selectedDatabase: NotionDatabase?
@@ -19,7 +21,7 @@ struct DatabaseSelectionView: View {
         ZStack {
             List {
                 NavigationLink {
-                    DatabaseCreationView()
+                    DatabaseCreationView(notionService: appServices.notionService)
                 } label: {
                     Text(String(moduleLocalized: "create-database-view-navigation-link"))
                 }
@@ -71,7 +73,7 @@ struct DatabaseSelectionView: View {
                     
                     Task {
                         do {
-                            try notionService.registerDatabase(id: selectedDatabaseID)
+                            try await notionService.registerDatabase(id: selectedDatabaseID)
                         } catch {
                             debugPrint(error.localizedDescription) // TODO: ハンドリング
                         }
@@ -107,11 +109,10 @@ extension DatabaseSelectionView {
 
 #Preview {
     NavigationStack {
-        DatabaseSelectionView()
-            .environment(NotionService(
-                keychainClient: .testValue,
-                notionClient: .testValue,
-                notionAuthClient: .testValue
-            ))
+        DatabaseSelectionView(notionService: .init(
+            keychainClient: .testValue,
+            notionClient: .testValue,
+            notionAuthClient: .testValue)
+        )
     }
 }

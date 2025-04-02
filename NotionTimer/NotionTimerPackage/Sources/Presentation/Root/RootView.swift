@@ -10,29 +10,29 @@ import DataLayer
 import Domain
 
 public struct RootView: View {
-    @State private var notionService = NotionService(
-        keychainClient: .liveValue,
-        notionClient: .liveValue,
-        notionAuthClient: .liveValue
-    )
+    @Environment(\.appServices) private var appServices
+    @State private var authStatus: NotionAuthStatus = .loading
     
     public init() {}
     
     public var body: some View {
         NavigationStack {
-            switch notionService.authStatus {
+            switch authStatus {
             case .loading:
                 CommonLoadingView()
             case .invalidToken:
                 LoginView()
             case .invalidDatabase:
-                DatabaseSelectionView()
+                DatabaseSelectionView(notionService: appServices.notionService)
             case .complete:
                 HomeView()
             }
         }
         .onAppear {
-            notionService.fetchAuthStatus()
+            Task {
+                await appServices.notionService.fetchAuthStatus()
+                authStatus = await appServices.notionService.authStatus
+            }
         }
         .onOpenURL(perform: { url in
             if let deeplink = url.getDeeplink() {
@@ -40,7 +40,9 @@ public struct RootView: View {
                 case .notionTemporaryToken(let token):
                     Task {
                         do {
-                            try await notionService.fetchAccessToken(temporaryToken: token)
+                            try await appServices.notionService.fetchAccessToken(temporaryToken: token)
+                            await appServices.notionService.fetchAuthStatus()
+                            authStatus = await appServices.notionService.authStatus
                         } catch {
                             // TODO: アラートを表示（アクセストークンの取得に失敗）
                             debugPrint(error)
@@ -49,8 +51,7 @@ public struct RootView: View {
                 }
             }
         })
-        .animation(.default, value: notionService.authStatus)
-        .environment(notionService)
+        .animation(.default, value: authStatus)
     }
 }
 

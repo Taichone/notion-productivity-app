@@ -11,7 +11,8 @@ import DataLayer
 import Domain
 
 struct RecordDisplayView: View {
-    @Environment(NotionService.self) private var notionService
+    let notionService: NotionService
+    
     @State private var records: [Record] = []
     @State private var isLoading = true
     private let chartViewID = UUID()
