@@ -12,6 +12,10 @@ import Observation
     public var isBreakEndSoundEnabled: Bool = true
     public var isManualBreakStartEnabled: Bool = true
     
+    // UI settings
+    public var focusColor: Color = .mint
+    public var breakColor: Color = .green
+    
     // Screen Time settings
     public var appSelection: AppSelection
     public var isFamilyActivityPickerPresented = false
