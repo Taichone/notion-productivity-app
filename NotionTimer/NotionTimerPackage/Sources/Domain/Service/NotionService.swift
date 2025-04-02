@@ -9,6 +9,14 @@ import Foundation
 import Observation
 import DataLayer
 
+extension NotionService {
+    static let shared: NotionService = .init(
+        keychainClient: AppDependenciesKey.defaultValue.keychainClient,
+        notionClient: AppDependenciesKey.defaultValue.notionAPIClient,
+        notionAuthClient: AppDependenciesKey.defaultValue.notionAuthClient
+    )
+}
+
 // TODO: NotionAuthService を作り認証周りを抜き出すことを検討
 @MainActor @Observable public final class NotionService {
     private let keychainClient: KeychainClient
