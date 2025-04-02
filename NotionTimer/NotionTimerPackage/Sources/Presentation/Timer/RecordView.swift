@@ -10,7 +10,9 @@ import DataLayer
 import Domain
 
 struct RecordView: View {
-    @Environment(NotionService.self) private var notionService: NotionService
+    let notionService: NotionService
+    
+    @Environment(\.appServices) private var appServices
     @EnvironmentObject private var router: NavigationRouter
     @State private var description: String = ""
     @State private var tags: [NotionTag] = []
@@ -18,8 +20,9 @@ struct RecordView: View {
     @State private var isLoading: Bool = true
     private let resultFocusTimeSec: Int
     
-    init(dependency: Dependency) {
+    init(dependency: Dependency, notionService: NotionService) {
         self.resultFocusTimeSec = dependency.resultFocusTimeSec
+        self.notionService = notionService
     }
     
     var body: some View {
@@ -131,5 +134,12 @@ extension RecordView {
 }
 
 #Preview {
-    RecordView(dependency: .init(resultFocusTimeSec: 3661))
+    RecordView(
+        dependency: .init(resultFocusTimeSec: 3661),
+        notionService: .init(
+            keychainClient: .testValue,
+            notionClient: .testValue,
+            notionAuthClient: .testValue
+        )
+    )
 }

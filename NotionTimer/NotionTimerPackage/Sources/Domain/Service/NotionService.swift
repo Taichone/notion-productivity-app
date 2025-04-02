@@ -9,28 +9,28 @@ import Foundation
 import Observation
 import DataLayer
 
-extension NotionService {
-    static let shared: NotionService = .init(
-        keychainClient: AppDependenciesKey.defaultValue.keychainClient,
-        notionClient: AppDependenciesKey.defaultValue.notionAPIClient,
-        notionAuthClient: AppDependenciesKey.defaultValue.notionAuthClient
-    )
-}
-
 // TODO: NotionAuthService を作り認証周りを抜き出すことを検討
-@MainActor @Observable public final class NotionService {
+public actor NotionService {
     private let keychainClient: KeychainClient
     private let notionClient: NotionAPIClient
     private let notionAuthClient: NotionAuthClient
     
     private var accessToken: String? {
-        keychainClient.retrieveToken(.notionAccessToken)
+        get async {
+            keychainClient.retrieveToken(.notionAccessToken)
+        }
     }
     private var databaseID: String? {
-        keychainClient.retrieveToken(.notionDatabaseID)
+        get async {
+            keychainClient.retrieveToken(.notionDatabaseID)
+        }
     }
     
-    public var authStatus: NotionAuthStatus = .loading
+    private var _authStatus: NotionAuthStatus = .loading
+    public var authStatus: NotionAuthStatus {
+        get { _authStatus }
+        set { _authStatus = newValue }
+    }
     
     public init(
         keychainClient: KeychainClient,
@@ -43,7 +43,7 @@ extension NotionService {
     }
     
     public func fetchAccessToken(temporaryToken: String) async throws {
-        authStatus = .loading
+        _authStatus = .loading
         
         do {
             let accessToken = try await notionAuthClient.getAccessToken(temporaryToken)
@@ -52,56 +52,56 @@ extension NotionService {
                 throw NotionServiceError.failedToSaveToKeychain
             }
             
-            fetchAuthStatus()
+            await fetchAuthStatus()
         } catch {
-            authStatus = .invalidToken
+            _authStatus = .invalidToken
             throw error
         }
     }
     
-    public func fetchAuthStatus() {
-        guard accessToken != nil else {
-            authStatus = .invalidToken
+    public func fetchAuthStatus() async {
+        guard await accessToken != nil else {
+            _authStatus = .invalidToken
             return
         }
         
-        guard databaseID != nil else {
-            authStatus = .invalidDatabase
+        guard await databaseID != nil else {
+            _authStatus = .invalidDatabase
             return
         }
         
         // TODO: token, databaseID の有効チェック
-        authStatus = .complete
+        _authStatus = .complete
     }
     
-    public func releaseAccessToken() {
+    public func releaseAccessToken() async {
         guard keychainClient.deleteToken(.notionAccessToken),
               keychainClient.deleteToken(.notionDatabaseID) else {
             fatalError("Keychain からトークンを削除できない")
         }
         
-        authStatus = .invalidToken
+        _authStatus = .invalidToken
     }
     
-    public func releaseSelectedDatabase() {
+    public func releaseSelectedDatabase() async {
         guard keychainClient.deleteToken(.notionDatabaseID) else {
             fatalError("Keychain からトークンを削除できない")
         }
         
-        authStatus = .invalidDatabase
+        _authStatus = .invalidDatabase
     }
 }
 
 extension NotionService {
-    private func token() throws -> String {
-        guard let token = accessToken else {
+    private func token() async throws -> String {
+        guard let token = await accessToken else {
             throw NotionServiceError.failedToRetrieveTokenFromKeychain
         }
         return token
     }
     
     public func getPageList() async throws -> [NotionPage] {
-        guard let token = accessToken else {
+        guard let token = await accessToken else {
             throw NotionServiceError.invalidClient
         }
         
@@ -114,41 +114,40 @@ extension NotionService {
         
     public func getCompatibleDatabaseList() async throws -> [NotionDatabase] {
         do {
-            return try await notionClient.getCompatibleDatabaseList(token())
+            return try await notionClient.getCompatibleDatabaseList(await token())
         } catch {
             throw NotionServiceError.failedToGetDatabaseList(error: error)
         }
     }
     
     public func createDatabase(parentPageID: String, title: String) async throws {
-        
         do {
             let databaseID = try await notionClient.createDatabaseAndGetDatabaseID(
-                token(),
+                await token(),
                 parentPageID,
                 title
             )
             
-            try registerDatabase(id: databaseID)
+            try await registerDatabase(id: databaseID)
         } catch {
             throw NotionServiceError.failedToCreateDatabase(error: error)
         }
     }
     
-    public func registerDatabase(id: String) throws {
+    public func registerDatabase(id: String) async throws {
         guard keychainClient.saveToken(id, .notionDatabaseID) else {
             throw NotionServiceError.failedToSaveToKeychain
         }
-        authStatus = .complete
+        _authStatus = .complete
     }
     
     public func record(time: Int, tags: [NotionTag], description: String) async throws {
-        guard let databaseID = databaseID else {
+        guard let databaseID = await databaseID else {
             throw NotionServiceError.invalidDatabase
         }
         
         try await notionClient.record(
-            token(),
+            await token(),
             Date(),
             time,
             tags,
@@ -158,23 +157,23 @@ extension NotionService {
     }
     
     public func getDatabaseTags() async throws -> [NotionTag] {
-        guard let databaseID = databaseID else {
+        guard let databaseID = await databaseID else {
             throw NotionServiceError.invalidDatabase
         }
         
         return try await notionClient.getDatabaseTags(
-            token(),
+            await token(),
             databaseID
         )
     }
     
     public func getAllRecords() async throws -> [Record] {
-        guard let databaseID = databaseID else {
+        guard let databaseID = await databaseID else {
             throw NotionServiceError.invalidDatabase
         }
         
         return try await notionClient.getAllRecords(
-            token(),
+            await token(),
             databaseID
         )
     }

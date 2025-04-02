@@ -10,8 +10,9 @@ import DataLayer
 import Domain
 
 struct DatabaseCreationView: View {
-    @Environment(NotionService.self) private var notionService
     @Environment(\.dismiss) private var dismiss
+    
+    let notionService: NotionService
     @State private var isLoading = true
     @State private var title: String = ""
     @State private var pages: [NotionPage] = []
@@ -117,11 +118,10 @@ struct DatabaseCreationView: View {
 
 #Preview {
     NavigationStack {
-        DatabaseCreationView()
-            .environment(NotionService(
-                keychainClient: .testValue,
-                notionClient: .testValue,
-                notionAuthClient: .testValue
-            ))
+        DatabaseCreationView(notionService: .init(
+            keychainClient: .testValue,
+            notionClient: .testValue,
+            notionAuthClient: .testValue
+        ))
     }
 }

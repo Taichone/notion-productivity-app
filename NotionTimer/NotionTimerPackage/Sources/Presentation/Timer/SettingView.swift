@@ -10,7 +10,7 @@ import DataLayer
 import Domain
 
 struct SettingView: View {
-    @Environment(NotionService.self) private var notionService
+    let notionService: NotionService
     @EnvironmentObject var router: NavigationRouter
     
     var body: some View {
@@ -18,8 +18,10 @@ struct SettingView: View {
             Section (
                 content: {
                     Button {
-                        notionService.releaseSelectedDatabase()
-                        router.items.removeAll()
+                        Task {
+                            await notionService.releaseSelectedDatabase()
+                            router.items.removeAll()
+                        }
                     } label: {
                         Text(String(moduleLocalized: "reselect-database"))
                     }
@@ -32,8 +34,10 @@ struct SettingView: View {
             Section (
                 content: {
                     Button {
-                        notionService.releaseAccessToken()
-                        router.items.removeAll()
+                        Task {
+                            await notionService.releaseAccessToken()
+                            router.items.removeAll()
+                        }
                     } label: {
                         Text(String(moduleLocalized: "logout"))
                     }
