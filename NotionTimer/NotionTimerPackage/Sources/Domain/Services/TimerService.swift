@@ -6,7 +6,6 @@
 
 import Foundation
 import DataLayer
-import Domain
 
 // TODO: Observable を積極検討
 @MainActor

@@ -35,14 +35,10 @@ let package = Package(
         ),
         .target(
             name: "Presentation",
-            dependencies: ["DataLayer", "Domain", "Timer"],
+            dependencies: ["DataLayer", "Domain"],
             resources: [
                 .process("Resources/Localizable.xcstrings")
             ]
-        ),
-        .target(
-            name: "Timer",
-            dependencies: ["DataLayer", "Domain"]
         ),
         
         // MARK: TestTargets

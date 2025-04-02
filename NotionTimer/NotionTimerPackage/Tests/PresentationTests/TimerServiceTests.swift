@@ -1,6 +1,5 @@
 import Testing
 @testable import Presentation
-@testable import Timer
 @testable import DataLayer
 @testable import Domain
 
