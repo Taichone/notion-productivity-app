@@ -7,7 +7,8 @@
 
 import SwiftUI
 import Timer
-import ScreenTime
+import DataLayer
+import Domain
 
 struct TimerView: View {
     @Environment(\.dismiss) private var dismiss

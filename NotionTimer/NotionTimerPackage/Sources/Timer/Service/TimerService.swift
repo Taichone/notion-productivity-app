@@ -5,7 +5,8 @@
 //  Created by Taichi on 2024/08/16
 
 import Foundation
-import ScreenTime
+import DataLayer
+import Domain
 
 // TODO: Observable を積極検討
 @MainActor

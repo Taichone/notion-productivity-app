@@ -8,11 +8,6 @@
 import Security
 import Foundation
 
-public protocol DependencyClient: Sendable {
-    static var liveValue: Self { get }
-    static var testValue: Self { get }
-}
-
 public struct KeychainClient: DependencyClient {
     public enum TokenType: String {
         case notionAccessToken

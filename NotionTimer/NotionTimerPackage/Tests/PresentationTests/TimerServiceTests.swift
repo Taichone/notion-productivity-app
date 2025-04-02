@@ -1,7 +1,8 @@
 import Testing
 @testable import Presentation
 @testable import Timer
-@testable import ScreenTime
+@testable import DataLayer
+@testable import Domain
 
 @MainActor
 struct TimerServiceTests {

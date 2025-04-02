@@ -34,18 +34,14 @@ let package = Package(
         ),
         .target(
             name: "Presentation",
-            dependencies: ["ScreenTime", "Notion", "Timer", "DataLayer", "Domain"],
+            dependencies: ["Notion", "Timer", "DataLayer", "Domain"],
             resources: [
                 .process("Resources/Localizable.xcstrings")
             ]
         ),
         .target(
-            name: "ScreenTime",
-            dependencies: []
-        ),
-        .target(
             name: "Timer",
-            dependencies: ["ScreenTime"]
+            dependencies: ["DataLayer", "Domain"]
         ),
         .testTarget(
             name: "PresentationTests",

@@ -13,11 +13,6 @@ extension ManagedSettingsStore: @retroactive @unchecked Sendable {}
 
 public typealias AppSelection = FamilyActivitySelection
 
-protocol DependencyClient: Sendable {
-    static var liveValue: Self { get }
-    static var testValue: Self { get }
-}
-
 public struct ScreenTimeClient: DependencyClient {
     public var authorize: @Sendable () async throws -> Void
     public var startAppRestriction: @Sendable (AppSelection) -> Void
