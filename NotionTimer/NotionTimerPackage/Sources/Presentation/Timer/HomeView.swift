@@ -23,6 +23,7 @@ final class NavigationRouter: ObservableObject {
 }
 
 struct HomeView: View {
+    @Environment(\.appDependencies) var appDependencies
     @StateObject private var router: NavigationRouter = .init()
     
     init() {}
@@ -49,7 +50,7 @@ struct HomeView: View {
                     SettingView()
                         .environmentObject(router)
                 case .timerSetting:
-                    TimerSettingView()
+                    TimerSettingView(screenTimeClient: appDependencies.screenTimeClient)
                         .environmentObject(router)
                 case .timer(let dependency):
                     TimerView(dependency: dependency)

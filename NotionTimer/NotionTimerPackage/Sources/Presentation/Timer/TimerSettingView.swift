@@ -28,23 +28,17 @@ struct TimerSettingView: View {
     // Router
     @EnvironmentObject var router: NavigationRouter
     
-    // Timer
-    @AppStorage(wrappedValue: 1500, "focusTimeSec") private var focusTimeSec
-    @AppStorage(wrappedValue: 300, "breakTimeSec") private var breakTimeSec
+    // ViewModel
+    @State private var viewModel: TimerSettingViewModel
     @State private var sheetType: TimerSettingSheetType?
     
-    // Color
-    @AppStorage(wrappedValue: false, "isBreakEndSoundEnabled") private var isBreakEndSoundEnabled
-    @AppStorage(wrappedValue: true, "isManualBreakStartEnabled") private var isManualBreakStartEnabled
-    @State private var focusColor = Color.mint
-    @State private var breakColor = Color.blue
+    // Color settings
+    public var focusColor: Color
+    public var breakColor: Color
     
-    // Screen Time
-    @State private var isFamilyActivityPickerPresented = false
-    @State private var appSelection = ScreenTimeService.familyActivitySelection
-    private let screenTimeClient = ScreenTimeClient.liveValue
-    
-    init() {}
+    init(screenTimeClient: ScreenTimeClient) {
+        self.viewModel = .init(screenTimeClient: screenTimeClient)
+    }
     
     var body: some View {
         Form {
@@ -55,7 +49,7 @@ struct TimerSettingView: View {
                     Button {
                         sheetType = .focusTimePicker
                     } label: {
-                        Text(String(focusTimeString))
+                        Text(viewModel.focusTimeString)
                     }
                 }
                 
@@ -65,25 +59,25 @@ struct TimerSettingView: View {
                     Button {
                         sheetType = .breakTimePicker
                     } label: {
-                        Text(String(breakTimeString))
+                        Text(viewModel.breakTimeString)
                     }
                 }
             }
             
             Section {
-                Toggle(isOn: $isBreakEndSoundEnabled) {
+                Toggle(isOn: $viewModel.isBreakEndSoundEnabled) {
                     Text(String(moduleLocalized: "enable-sound-at-break-end"))
                 }
-                Toggle(isOn: $isManualBreakStartEnabled) {
+                Toggle(isOn: $viewModel.isManualBreakStartEnabled) {
                     Text(String(moduleLocalized: "start-break-time-manually"))
                 }
-                ColorPicker(String(moduleLocalized: "focus-time-color"), selection: $focusColor)
-                ColorPicker(String(moduleLocalized: "break-time-color"), selection: $breakColor)
+                ColorPicker(String(moduleLocalized: "focus-time-color"), selection: $viewModel.focusColor)
+                ColorPicker(String(moduleLocalized: "break-time-color"), selection: $viewModel.breakColor)
             }
             
             Button {
                 Task {
-                    await tryShowFamilyActivityPicker()
+                    await viewModel.tryShowFamilyActivityPicker()
                 }
             } label: {
                 Text(String(moduleLocalized: "select-apps-to-restrict"))
@@ -94,56 +88,41 @@ struct TimerSettingView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    router.items.append(.timer(dependency: .init(
-                        isBreakEndSoundEnabled: isBreakEndSoundEnabled,
-                        isManualBreakStartEnabled: isManualBreakStartEnabled,
-                        focusTimeSec: focusTimeSec,
-                        breakTimeSec: breakTimeSec,
-                        focusColor: focusColor,
-                        breakColor: breakColor
-                    )))
+                    router.items.append(.timer(
+                        dependency: .init(
+                            isBreakEndSoundEnabled: viewModel.isBreakEndSoundEnabled,
+                            isManualBreakStartEnabled: viewModel.isManualBreakStartEnabled,
+                            focusTimeSec: viewModel.focusTimeSec,
+                            breakTimeSec: viewModel.breakTimeSec,
+                            focusColor: viewModel.focusColor,
+                            breakColor: viewModel.breakColor
+                        )
+                    ))
                 } label: {
                     Text(String(moduleLocalized: "ok"))
                 }
             }
         }
         .familyActivityPicker(
-            isPresented: $isFamilyActivityPickerPresented,
-            selection: $appSelection
+            isPresented: $viewModel.isFamilyActivityPickerPresented,
+            selection: $viewModel.appSelection
         )
         .task {
-            screenTimeClient.stopAppRestriction()
+            viewModel.stopAppRestriction()
         }
         .sheet(item: $sheetType) { type in
             switch type {
             case .focusTimePicker:
-                TimePicker(sec: $focusTimeSec, title: type.title)
+                TimePicker(sec: $viewModel.focusTimeSec, title: type.title)
                     .presentationDetents([.medium])
             case .breakTimePicker:
-                TimePicker(sec: $breakTimeSec, title: type.title)
+                TimePicker(sec: $viewModel.breakTimeSec, title: type.title)
                     .presentationDetents([.medium])
             }
         }
     }
 }
 
-extension TimerSettingView {
-    private var focusTimeString: String {
-        "\(focusTimeSec / 60):\(String(format: "%02d", focusTimeSec % 60))"
-    }
-    
-    private var breakTimeString: String {
-        "\(breakTimeSec / 60):\(String(format: "%02d", breakTimeSec % 60))"
-    }
-    
-    private func tryShowFamilyActivityPicker() async {
-        do {
-            try await screenTimeClient.authorize()
-            isFamilyActivityPickerPresented = true
-        } catch {} // 認証するまで何度でも認証画面を開けるのでハンドリング不要
-    }
-}
-
 #Preview {
-    TimerSettingView()
+    TimerSettingView(screenTimeClient: .testValue)
 }
