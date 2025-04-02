@@ -33,8 +33,8 @@ struct TimerSettingView: View {
     @State private var sheetType: TimerSettingSheetType?
     
     // Color settings
-    public var focusColor: Color
-    public var breakColor: Color
+    @State private var focusColor: Color = .mint
+    @State private var breakColor: Color = .green
     
     init(screenTimeClient: ScreenTimeClient) {
         self.viewModel = .init(screenTimeClient: screenTimeClient)
@@ -71,8 +71,10 @@ struct TimerSettingView: View {
                 Toggle(isOn: $viewModel.isManualBreakStartEnabled) {
                     Text(String(moduleLocalized: "start-break-time-manually"))
                 }
-                ColorPicker(String(moduleLocalized: "focus-time-color"), selection: $viewModel.focusColor)
-                ColorPicker(String(moduleLocalized: "break-time-color"), selection: $viewModel.breakColor)
+                ColorPicker(String(moduleLocalized: "focus-time-color"), selection: $focusColor)
+                ColorPicker(String(moduleLocalized: "break-time-color"), selection: $breakColor)
+            } header: {
+                Text(String(moduleLocalized: "appearance-settings"))
             }
             
             Button {
