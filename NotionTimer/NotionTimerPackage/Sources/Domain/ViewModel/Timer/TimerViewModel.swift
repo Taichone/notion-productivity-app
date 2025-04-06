@@ -4,9 +4,7 @@
 //
 //  Created by Taichi on 2024/08/16
 
-import Foundation
 import DataLayer
-import Observation
 import SwiftUI
 
 // TODO: Observable を積極検討

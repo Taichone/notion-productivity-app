@@ -6,7 +6,6 @@
 //
 
 import DataLayer
-import SwiftUI
 import Observation
 
 @MainActor @Observable public final class SettingViewModel {

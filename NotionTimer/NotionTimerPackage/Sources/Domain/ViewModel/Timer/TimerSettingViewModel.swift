@@ -1,6 +1,5 @@
 import SwiftUI
 import DataLayer
-import Observation
 
 @MainActor @Observable public final class TimerSettingViewModel {
     // Dependencies
