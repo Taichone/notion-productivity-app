@@ -10,28 +10,25 @@ import DataLayer
 import Domain
 
 struct RecordView: View {
-    let notionService: NotionService
+    @State private var viewModel: RecordViewModel
     
     @Environment(\.appServices) private var appServices
     @EnvironmentObject private var router: NavigationRouter
-    @State private var description: String = ""
-    @State private var tags: [NotionTag] = []
-    @State private var selectedTags: Set<NotionTag> = []
-    @State private var isLoading: Bool = true
-    private let resultFocusTimeSec: Int
     
     init(dependency: Dependency, notionService: NotionService) {
-        self.resultFocusTimeSec = dependency.resultFocusTimeSec
-        self.notionService = notionService
+        self.viewModel = .init(
+            notionService: notionService, 
+            resultFocusTimeSec: dependency.resultFocusTimeSec
+        )
     }
     
     var body: some View {
         ZStack {
-            List(selection: $selectedTags) {
+            List(selection: $viewModel.selectedTags) {
                 Group {
                     Section (
                         content: {
-                            TextEditor(text: $description)
+                            TextEditor(text: $viewModel.description)
                                 .frame(height: 100)
                         },
                         header: {
@@ -45,7 +42,7 @@ struct RecordView: View {
                 
                 Section (
                     content: {
-                        ForEach(tags) { tag in
+                        ForEach(viewModel.tags) { tag in
                             Text(tag.name)
                                 .tag(tag)
                                 .listRowBackground(
@@ -71,18 +68,18 @@ struct RecordView: View {
             .environment(\.editMode, .constant(.active))
             
             CommonLoadingView()
-                .hidden(!isLoading)
+                .hidden(!viewModel.isLoading)
         }
         .navigationTitle(String(moduleLocalized: "timer-record-view-navigation-title"))
         .navigationBarTitleDisplayMode(.inline)
         .task {
             // TODO: 初回読み込みのタイミングは UX に考慮して再検討
-            await fetchDatabaseTags()
+            await viewModel.fetchDatabaseTags()
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    Task { await fetchDatabaseTags() }
+                    Task { await viewModel.fetchDatabaseTags() }
                 } label: {
                     Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
                 }
@@ -91,39 +88,19 @@ struct RecordView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     Task {
-                        await record(tags: Array(selectedTags), description: description)
+                        do {
+                            try await viewModel.record()
+                            router.items.removeAll() // HomeView に戻る
+                        } catch {
+                            debugPrint(error.localizedDescription) // TODO: ハンドリング
+                        }
                     }
                 } label: {
                     Text(String(moduleLocalized: "ok"))
                 }
-                .disabled(isLoading)
+                .disabled(viewModel.isLoading)
             }
         }
-    }
-    
-    private func record(tags: [NotionTag], description: String) async {
-        isLoading = true
-        do {
-            try await notionService.record(
-                time: resultFocusTimeSec,
-                tags: tags,
-                description: description
-            )
-            router.items.removeAll() // HomeView に戻る
-        } catch {
-            debugPrint(error.localizedDescription) // TODO: ハンドリング
-        }
-        isLoading = false
-    }
-    
-    private func fetchDatabaseTags() async {
-        isLoading = true
-        do {
-            tags = try await notionService.getDatabaseTags()
-        } catch {
-            debugPrint(error.localizedDescription) // TODO: ハンドリング
-        }
-        isLoading = false
     }
 }
 
