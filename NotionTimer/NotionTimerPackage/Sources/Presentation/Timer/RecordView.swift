@@ -11,11 +11,9 @@ import Domain
 
 struct RecordView: View {
     @State private var viewModel: RecordViewModel
+    @Environment(\.appRouter) private var appRouter
     
-    @Environment(\.appServices) private var appServices
-    @EnvironmentObject private var router: NavigationRouter
-    
-    init(dependency: Dependency, notionService: NotionService) {
+    init(dependency: AppRouter.RecordDependency, notionService: NotionService) {
         self.viewModel = .init(
             notionService: notionService, 
             resultFocusTimeSec: dependency.resultFocusTimeSec
@@ -90,7 +88,7 @@ struct RecordView: View {
                     Task {
                         do {
                             try await viewModel.record()
-                            router.items.removeAll() // HomeView に戻る
+                            appRouter.items.removeAll() // HomeView に戻る
                         } catch {
                             debugPrint(error.localizedDescription) // TODO: ハンドリング
                         }
@@ -104,15 +102,9 @@ struct RecordView: View {
     }
 }
 
-extension RecordView {
-    struct Dependency: Hashable {
-        let resultFocusTimeSec: Int
-    }
-}
-
 #Preview {
     RecordView(
-        dependency: .init(resultFocusTimeSec: 3661),
+        dependency: AppRouter.RecordDependency(resultFocusTimeSec: 3661),
         notionService: .init(
             keychainClient: .testValue,
             notionClient: .testValue,

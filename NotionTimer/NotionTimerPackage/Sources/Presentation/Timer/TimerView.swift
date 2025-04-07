@@ -11,13 +11,14 @@ import Domain
 
 struct TimerView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var router: NavigationRouter
+    @Environment(\.appServices) private var appServices
+    @Environment(\.appRouter) private var appRouter
     @State private var viewModel: TimerViewModel
     
     private let focusColor: Color
     private let breakColor: Color
     
-    init(dependency: Dependency) {
+    init(dependency: AppRouter.TimerDependency) {
         self.focusColor = dependency.focusColor
         self.breakColor = dependency.breakColor
         self.viewModel = .init(
@@ -112,7 +113,7 @@ struct TimerView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     // TODO: 確認アラートを挟む
-                    router.items.append(.timerRecord(dependency: .init(
+                    appRouter.items.append(.timerRecord(dependency: .init(
                         resultFocusTimeSec: viewModel.totalFocusTimeSec
                     )))
                     viewModel.terminate()
@@ -128,20 +129,9 @@ struct TimerView: View {
     }
 }
 
-extension TimerView {
-    struct Dependency: Hashable {
-        let isBreakEndSoundEnabled: Bool
-        let isManualBreakStartEnabled: Bool
-        let focusTimeSec: Int
-        let breakTimeSec: Int
-        let focusColor: Color
-        let breakColor: Color
-    }
-}
-
 #Preview {
     NavigationStack {
-        TimerView(dependency: .init(
+        TimerView(dependency: AppRouter.TimerDependency(
             isBreakEndSoundEnabled: true,
             isManualBreakStartEnabled: true,
             focusTimeSec: 1500,

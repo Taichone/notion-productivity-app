@@ -11,6 +11,7 @@ import Domain
 
 public struct RootView: View {
     @Environment(\.appServices) private var appServices
+    @Environment(\.appRouter) private var appRouter
     @State private var authStatus: NotionAuthStatus = .loading
     
     public init() {}
@@ -28,6 +29,7 @@ public struct RootView: View {
                 HomeView()
             }
         }
+        .environment(\.appRouter, appRouter)
         .onAppear {
             Task {
                 await appServices.notionService.fetchAuthStatus()

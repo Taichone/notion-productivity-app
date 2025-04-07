@@ -25,10 +25,7 @@ enum TimerSettingSheetType: String, Identifiable {
 }
 
 struct TimerSettingView: View {
-    // Router
-    @EnvironmentObject var router: NavigationRouter
-    
-    // ViewModel
+    @Environment(\.appRouter) private var appRouter
     @State private var viewModel: TimerSettingViewModel
     @State private var sheetType: TimerSettingSheetType?
     
@@ -86,8 +83,8 @@ struct TimerSettingView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    router.items.append(.timer(
-                        dependency: .init(
+                    appRouter.items.append(.timer(
+                        dependency: AppRouter.TimerDependency(
                             isBreakEndSoundEnabled: viewModel.isBreakEndSoundEnabled,
                             isManualBreakStartEnabled: viewModel.isManualBreakStartEnabled,
                             focusTimeSec: viewModel.focusTimeSec,

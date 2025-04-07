@@ -11,7 +11,7 @@ import Domain
 
 struct SettingView: View {
     @State private var viewModel: SettingViewModel
-    @EnvironmentObject var router: NavigationRouter
+    @Environment(\.appRouter) private var appRouter
     
     init(notionService: NotionService) {
         self.viewModel = .init(notionService: notionService)
@@ -24,7 +24,7 @@ struct SettingView: View {
                     Button {
                         Task {
                             await viewModel.reselectDatabase()
-                            router.items.removeAll()
+                            appRouter.items.removeAll()
                         }
                     } label: {
                         Text(String(moduleLocalized: "reselect-database"))
@@ -40,7 +40,7 @@ struct SettingView: View {
                     Button {
                         Task {
                             await viewModel.logout()
-                            router.items.removeAll()
+                            appRouter.items.removeAll()
                         }
                     } label: {
                         Text(String(moduleLocalized: "logout"))
