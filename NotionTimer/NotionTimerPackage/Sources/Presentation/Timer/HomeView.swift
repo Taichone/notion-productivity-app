@@ -23,17 +23,23 @@ final class NavigationRouter: ObservableObject {
 }
 
 struct HomeView: View {
-    @Environment(\.appDependencies) var appDependencies
-    @Environment(\.appServices) var appServices
     @StateObject private var router: NavigationRouter = .init()
+    private let notionService: NotionService
+    private let screenTimeClient: ScreenTimeClient
     
-    init() {}
+    init(
+        notionService: NotionService,
+        screenTimeClient: ScreenTimeClient
+    ) {
+        self.notionService = notionService
+        self.screenTimeClient = screenTimeClient
+    }
     
     var body: some View {
         NavigationStack(path: $router.items) {
             List {
                 Section(String(moduleLocalized: "record-display-header")) {
-                    RecordDisplayView(notionService: appServices.notionService)
+                    RecordDisplayView(notionService: notionService)
                 }
                 
                 Section(String(moduleLocalized: "timer-button-header")) {
@@ -48,16 +54,16 @@ struct HomeView: View {
             .navigationDestination(for: NavigationRouter.Item.self) { item in
                 switch item {
                 case .setting:
-                    SettingView(notionService: appServices.notionService)
+                    SettingView(notionService: notionService)
                         .environmentObject(router)
                 case .timerSetting:
-                    TimerSettingView(screenTimeClient: appDependencies.screenTimeClient)
+                    TimerSettingView(screenTimeClient: screenTimeClient)
                         .environmentObject(router)
                 case .timer(let dependency):
                     TimerView(dependency: dependency)
                         .environmentObject(router)
                 case .timerRecord(let dependency):
-                    RecordView(dependency: dependency, notionService: appServices.notionService)
+                    RecordView(dependency: dependency, notionService: notionService)
                         .environmentObject(router)
                 }
             }

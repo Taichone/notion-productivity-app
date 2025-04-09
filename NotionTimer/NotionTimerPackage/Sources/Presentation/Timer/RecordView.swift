@@ -11,8 +11,6 @@ import Domain
 
 struct RecordView: View {
     @State private var viewModel: RecordViewModel
-    
-    @Environment(\.appServices) private var appServices
     @EnvironmentObject private var router: NavigationRouter
     
     init(dependency: Dependency, notionService: NotionService) {

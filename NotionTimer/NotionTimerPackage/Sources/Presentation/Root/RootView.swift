@@ -9,52 +9,88 @@ import SwiftUI
 import DataLayer
 import Domain
 
-public struct RootView: View {
-    @Environment(\.appServices) private var appServices
-    @State private var authStatus: NotionAuthStatus = .loading
+@MainActor @Observable public final class RootViewModel {
+    private let notionService: NotionService
+    public var authStatus: NotionAuthStatus
     
-    public init() {}
+    public init(notionService: NotionService) {
+        self.authStatus = .loading
+        self.notionService = notionService
+    }
+    
+    public func onAppear() async {
+        await notionService.fetchAuthStatus()
+        authStatus = await notionService.authStatus
+    }
+    
+    public func onOpenURL(_ url: URL) async {
+        if let deeplink = url.getDeeplink() {
+            switch deeplink {
+            case .notionTemporaryToken(let token):
+                Task {
+                    do {
+                        try await notionService.fetchAccessToken(temporaryToken: token)
+                        await notionService.fetchAuthStatus()
+                        authStatus = await notionService.authStatus
+                    } catch {
+                        // TODO: アラートを表示（アクセストークンの取得に失敗）
+                        debugPrint(error)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+public struct RootView: View {
+    private let screenTimeClient: ScreenTimeClient
+    private let notionService: NotionService
+    
+    @State private var viewModel: RootViewModel
+    
+    public init(notionService: NotionService, screenTimeClient: ScreenTimeClient) {
+        self.screenTimeClient = screenTimeClient
+        self.notionService = notionService
+        self.viewModel = .init(notionService: notionService)
+    }
     
     public var body: some View {
         NavigationStack {
-            switch authStatus {
+            switch viewModel.authStatus {
             case .loading:
                 CommonLoadingView()
             case .invalidToken:
                 LoginView()
             case .invalidDatabase:
-                DatabaseSelectionView(notionService: appServices.notionService)
+                DatabaseSelectionView(notionService: notionService)
             case .complete:
-                HomeView()
+                HomeView(
+                    notionService: notionService,
+                    screenTimeClient: screenTimeClient
+                )
             }
         }
         .onAppear {
             Task {
-                await appServices.notionService.fetchAuthStatus()
-                authStatus = await appServices.notionService.authStatus
+                await viewModel.onAppear()
             }
         }
         .onOpenURL(perform: { url in
-            if let deeplink = url.getDeeplink() {
-                switch deeplink {
-                case .notionTemporaryToken(let token):
-                    Task {
-                        do {
-                            try await appServices.notionService.fetchAccessToken(temporaryToken: token)
-                            await appServices.notionService.fetchAuthStatus()
-                            authStatus = await appServices.notionService.authStatus
-                        } catch {
-                            // TODO: アラートを表示（アクセストークンの取得に失敗）
-                            debugPrint(error)
-                        }
-                    }
-                }
+            Task {
+                await viewModel.onOpenURL(url)
             }
         })
-        .animation(.default, value: authStatus)
+        .animation(.default, value: viewModel.authStatus)
     }
 }
 
 #Preview {
-    RootView()
+    RootView(
+        notionService: .init(
+            keychainClient: .testValue,
+            notionClient: .testValue,
+            notionAuthClient: .testValue),
+        screenTimeClient: .testValue
+    )
 }
