@@ -7,12 +7,19 @@
 
 import SwiftUI
 import Presentation
+import Domain
 
 @main
 struct NotionTimerApp: App {
+    @Environment(\.appServices) private var appServices
+    @Environment(\.appDependencies) private var appDependencies
+    
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(
+                notionService: appServices.notionService,
+                screenTimeClient: appDependencies.screenTimeClient
+            )
         }
     }
 }
