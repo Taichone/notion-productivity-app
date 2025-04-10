@@ -12,6 +12,7 @@ public enum NotionServiceError: Error {
     case accessTokenNotFound
     case invalidClient
     case invalidDatabase
+    case parentPageIsNotSelected
     case failedToGetPageList(error: Error)
     case failedToGetRecordList(error: Error)
     case failedToGetDatabaseList(error: Error)

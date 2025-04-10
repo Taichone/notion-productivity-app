@@ -37,16 +37,12 @@ public struct RootView: View {
                 )
             }
         }
-        .onAppear {
-            Task {
-                await viewModel.onAppear()
-            }
-        }
-        .onOpenURL(perform: { url in
-            Task {
-                await viewModel.onOpenURL(url)
-            }
-        })
+        .onAppear { Task {
+            await viewModel.onAppear()
+        }}
+        .onOpenURL(perform: { url in Task {
+            await viewModel.onOpenURL(url)
+        }})
         .animation(.default, value: viewModel.authStatus)
     }
 }

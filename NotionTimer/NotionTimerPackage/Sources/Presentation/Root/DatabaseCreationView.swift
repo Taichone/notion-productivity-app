@@ -9,22 +9,67 @@ import SwiftUI
 import DataLayer
 import Domain
 
+@MainActor @Observable public final class DatabaseCreationViewModel {
+    private let notionService: NotionService
+    
+    public var isLoading: Bool = true
+    public var title: String = ""
+    public var pages: [NotionPage] = []
+    public var selectedParentPage: NotionPage?
+    
+    public init(notionService: NotionService) {
+        self.notionService = notionService
+    }
+    
+    public  func createDatabase() async throws {
+        isLoading = true
+        defer {
+            isLoading = false
+        }
+        
+        guard let selectedParentPageID = selectedParentPage?.id else {
+            throw NotionServiceError.parentPageIsNotSelected
+        }
+        try await notionService.createDatabase(
+            parentPageID: selectedParentPageID,
+            title: title
+        )
+    }
+    
+    public func fetchPages() async {
+        isLoading = true
+        do {
+            let selectedPageID = selectedParentPage?.id
+            
+            pages = try await notionService.getPageList()
+            
+            if let selectedPageID = selectedPageID {
+                selectedParentPage = pages.first { $0.id == selectedPageID }
+            } else {
+                selectedParentPage = nil
+            }
+        } catch {
+            debugPrint("ERROR: ページ一覧の取得に失敗") // TODO: ハンドリング
+        }
+        isLoading = false
+    }
+}
+
 struct DatabaseCreationView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var viewModel: DatabaseCreationViewModel
     
-    let notionService: NotionService
-    @State private var isLoading = true
-    @State private var title: String = ""
-    @State private var pages: [NotionPage] = []
-    @State private var selectedParentPage: NotionPage?
+    init(notionService: NotionService) {
+        self.viewModel = .init(notionService: notionService)
+    }
     
     var body: some View {
         ZStack {
             Form {
                 Section (
                     content: {
-                        Picker("", selection: $selectedParentPage) {
-                            ForEach(pages) { page in
+                        Picker("", selection: $viewModel.selectedParentPage) {
+                            ForEach(viewModel.pages) { page in
                                 Text("\(page.title)").tag(page)
                             }
                             Text(String(moduleLocalized: "parent-page-unselected"))
@@ -43,7 +88,10 @@ struct DatabaseCreationView: View {
                 
                 Section (
                     content: {
-                        TextField(String(moduleLocalized: "new-database-title-text-field-spaceholder"), text: $title)
+                        TextField(
+                            String(moduleLocalized: "new-database-title-text-field-spaceholder"),
+                            text: $viewModel.title
+                        )
                     },
                     header: {
                         Text(String(moduleLocalized: "new-database-title"))
@@ -55,18 +103,18 @@ struct DatabaseCreationView: View {
             }
             
             CommonLoadingView()
-                .hidden(!isLoading)
+                .hidden(!viewModel.isLoading)
         }
         .navigationTitle(String(moduleLocalized: "database-creation-view-navigation-title"))
         .navigationBarTitleDisplayMode(.inline)
         .task {
             // TODO: 初回読み込みのタイミングは UX に考慮して再検討
-            await fetchPages()
+            await viewModel.fetchPages()
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    Task { await fetchPages() }
+                    Task { await viewModel.fetchPages() }
                 } label: {
                     Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
                 }
@@ -74,45 +122,20 @@ struct DatabaseCreationView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    guard let selectedPageID = selectedParentPage?.id else {
-                        fatalError("ERROR: selectedParentPage が nil でも OK ボタンが押せている")
+                    Task {
+                        do {
+                            try await viewModel.createDatabase()
+                            dismiss()
+                        } catch {
+                            
+                        }
                     }
-                    Task { await createDatabase(parentPageID: selectedPageID, title: title) }
                 } label: {
                     Text(String(moduleLocalized: "ok"))
                 }
-                .disabled(title.isEmpty || isLoading || selectedParentPage == nil)
+                .disabled(viewModel.title.isEmpty || viewModel.isLoading || viewModel.selectedParentPage == nil)
             }
         }
-    }
-    
-    private func fetchPages() async {
-        isLoading = true
-        do {
-            let selectedPageID = selectedParentPage?.id
-            
-            pages = try await notionService.getPageList()
-            
-            if let selectedPageID = selectedPageID {
-                selectedParentPage = pages.first { $0.id == selectedPageID }
-            } else {
-                selectedParentPage = nil
-            }
-        } catch {
-            debugPrint("ERROR: ページ一覧の取得に失敗") // TODO: ハンドリング
-        }
-        isLoading = false
-    }
-    
-    private func createDatabase(parentPageID: String, title: String) async {
-        isLoading = true
-        do {
-            try await notionService.createDatabase(parentPageID: parentPageID, title: title)
-            dismiss()
-        } catch {
-            debugPrint("ERROR: データベースの作成に失敗") // TODO: ハンドリング
-        }
-        isLoading = false
     }
 }
 
