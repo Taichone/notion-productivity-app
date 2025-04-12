@@ -11,16 +11,10 @@ import Domain
 
 @main
 struct NotionTimerApp: App {
-    @Environment(\.appServices) private var appServices
-    @Environment(\.appDependencies) private var appDependencies
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
     var body: some Scene {
-        WindowGroup {
-            RootView(
-                notionService: appServices.notionService,
-                screenTimeClient: appDependencies.screenTimeClient
-            )
-        }
+        RootScene()
     }
 }
 

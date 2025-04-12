@@ -9,20 +9,36 @@ import SwiftUI
 import DataLayer
 import Domain
 
-public struct RootView: View {
+public struct RootScene: Scene {
+    @Environment(\.appServices) private var appServices
+    @Environment(\.appDependencies) private var appDependencies
+    
+    public init() {}
+    
+    public var body: some Scene {
+        WindowGroup {
+            RootView(
+                notionService: appServices.notionService,
+                screenTimeClient: appDependencies.screenTimeClient
+            )
+        }
+    }
+}
+
+struct RootView: View {
     private let screenTimeClient: ScreenTimeClient
     private let notionService: NotionService
     
     @State private var viewModel: RootViewModel
     
-    public init(notionService: NotionService, screenTimeClient: ScreenTimeClient) {
+    init(notionService: NotionService, screenTimeClient: ScreenTimeClient) {
         self.screenTimeClient = screenTimeClient
         self.notionService = notionService
         self.viewModel = .init(notionService: notionService)
     }
     
     public var body: some View {
-        NavigationStack {
+        Group {
             switch viewModel.authStatus {
             case .loading:
                 CommonLoadingView()
@@ -37,9 +53,9 @@ public struct RootView: View {
                 )
             }
         }
-        .onAppear { Task {
+        .task {
             await viewModel.onAppear()
-        }}
+        }
         .onOpenURL(perform: { url in Task {
             await viewModel.onOpenURL(url)
         }})
@@ -52,7 +68,8 @@ public struct RootView: View {
         notionService: .init(
             keychainClient: .testValue,
             notionClient: .testValue,
-            notionAuthClient: .testValue),
+            notionAuthClient: .testValue
+        ),
         screenTimeClient: .testValue
     )
 }
