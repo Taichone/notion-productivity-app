@@ -21,7 +21,7 @@ struct TimerView: View {
         self.focusColor = dependency.focusColor
         self.breakColor = dependency.breakColor
         self.viewModel = .init(
-            isManualBreakStartEnabled: dependency.isManualBreakStartEnabled,
+            isManualBreakStartEnabled: dependency.manualBreakStartIsEnabled,
             focusTimeSec: dependency.focusTimeSec,
             breakTimeSec: dependency.breakTimeSec,
             screenTimeClient: ScreenTimeClient.liveValue
@@ -130,8 +130,8 @@ struct TimerView: View {
 
 extension TimerView {
     struct Dependency: Hashable {
-        let isBreakEndSoundEnabled: Bool
-        let isManualBreakStartEnabled: Bool
+        let breakEndSoundIsEnabled: Bool
+        let manualBreakStartIsEnabled: Bool
         let focusTimeSec: Int
         let breakTimeSec: Int
         let focusColor: Color
@@ -142,8 +142,8 @@ extension TimerView {
 #Preview {
     NavigationStack {
         TimerView(dependency: .init(
-            isBreakEndSoundEnabled: true,
-            isManualBreakStartEnabled: true,
+            breakEndSoundIsEnabled: true,
+            manualBreakStartIsEnabled: true,
             focusTimeSec: 1500,
             breakTimeSec: 300,
             focusColor: .mint,

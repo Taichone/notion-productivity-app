@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension Color {
+public extension Color {
     init(hex: String, opacity: CGFloat = 1.0) {
         let hexFormatted = hex.trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "#", with: "")
@@ -28,6 +28,23 @@ extension Color {
             green: Double((rgbValue & 0x00FF00) >> 8) / 255.0,
             blue: Double((rgbValue & 0x0000FF)) / 255.0,
             opacity: opacity
+        )
+    }
+    
+    var hexString: String {
+        let uiColor = UIColor(self)
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        return String(
+            format: "#%02X%02X%02X",
+            Int(red * 255),
+            Int(green * 255),
+            Int(blue * 255)
         )
     }
 }

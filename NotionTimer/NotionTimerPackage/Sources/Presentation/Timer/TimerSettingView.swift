@@ -32,8 +32,14 @@ struct TimerSettingView: View {
     @State private var viewModel: TimerSettingViewModel
     @State private var sheetType: TimerSettingSheetType?
     
-    init(screenTimeClient: ScreenTimeClient) {
-        self.viewModel = .init(screenTimeClient: screenTimeClient)
+    init(
+        screenTimeClient: ScreenTimeClient,
+        userDefaultsClient: UserDefaultsClient
+    ) {
+        self.viewModel = .init(
+            screenTimeClient: screenTimeClient,
+            userDefaultsClient: userDefaultsClient
+        )
     }
     
     var body: some View {
@@ -61,10 +67,10 @@ struct TimerSettingView: View {
             }
             
             Section {
-                Toggle(isOn: $viewModel.isBreakEndSoundEnabled) {
+                Toggle(isOn: $viewModel.breakEndSoundIsEnabled) {
                     Text(String(moduleLocalized: "enable-sound-at-break-end"))
                 }
-                Toggle(isOn: $viewModel.isManualBreakStartEnabled) {
+                Toggle(isOn: $viewModel.manualBreakStartIsEnabled) {
                     Text(String(moduleLocalized: "start-break-time-manually"))
                 }
                 ColorPicker(String(moduleLocalized: "focus-time-color"), selection: $viewModel.focusColor)
@@ -88,8 +94,8 @@ struct TimerSettingView: View {
                 Button {
                     router.items.append(.timer(
                         dependency: .init(
-                            isBreakEndSoundEnabled: viewModel.isBreakEndSoundEnabled,
-                            isManualBreakStartEnabled: viewModel.isManualBreakStartEnabled,
+                            breakEndSoundIsEnabled: viewModel.breakEndSoundIsEnabled,
+                            manualBreakStartIsEnabled: viewModel.manualBreakStartIsEnabled,
                             focusTimeSec: viewModel.focusTimeSec,
                             breakTimeSec: viewModel.breakTimeSec,
                             focusColor: viewModel.focusColor,
@@ -122,5 +128,8 @@ struct TimerSettingView: View {
 }
 
 #Preview {
-    TimerSettingView(screenTimeClient: .testValue)
+    TimerSettingView(
+        screenTimeClient: .testValue,
+        userDefaultsClient: .testValue
+    )
 }

@@ -26,13 +26,16 @@ struct HomeView: View {
     @StateObject private var router: NavigationRouter = .init()
     private let notionService: NotionService
     private let screenTimeClient: ScreenTimeClient
+    private let userDefaultsClient: UserDefaultsClient
     
     init(
         notionService: NotionService,
-        screenTimeClient: ScreenTimeClient
+        screenTimeClient: ScreenTimeClient,
+        userDefaultsClient: UserDefaultsClient
     ) {
         self.notionService = notionService
         self.screenTimeClient = screenTimeClient
+        self.userDefaultsClient = userDefaultsClient
     }
     
     var body: some View {
@@ -57,7 +60,10 @@ struct HomeView: View {
                     SettingView(notionService: notionService)
                         .environmentObject(router)
                 case .timerSetting:
-                    TimerSettingView(screenTimeClient: screenTimeClient)
+                    TimerSettingView(
+                        screenTimeClient: screenTimeClient,
+                        userDefaultsClient: userDefaultsClient
+                    )
                         .environmentObject(router)
                 case .timer(let dependency):
                     TimerView(dependency: dependency)

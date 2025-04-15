@@ -19,7 +19,8 @@ public struct RootScene: Scene {
         WindowGroup {
             RootView(
                 notionService: appServices.notionService,
-                screenTimeClient: appDependencies.screenTimeClient
+                screenTimeClient: appDependencies.screenTimeClient,
+                userDefaultsClient: appDependencies.userDefaultsClient
             )
         }
     }
@@ -28,11 +29,17 @@ public struct RootScene: Scene {
 struct RootView: View {
     private let screenTimeClient: ScreenTimeClient
     private let notionService: NotionService
+    private let userDefaultsClient: UserDefaultsClient
     
     @State private var viewModel: RootViewModel
     
-    init(notionService: NotionService, screenTimeClient: ScreenTimeClient) {
+    init(
+        notionService: NotionService,
+        screenTimeClient: ScreenTimeClient,
+        userDefaultsClient: UserDefaultsClient
+    ) {
         self.screenTimeClient = screenTimeClient
+        self.userDefaultsClient = userDefaultsClient
         self.notionService = notionService
         self.viewModel = .init(notionService: notionService)
     }
@@ -49,7 +56,8 @@ struct RootView: View {
             case .complete:
                 HomeView(
                     notionService: notionService,
-                    screenTimeClient: screenTimeClient
+                    screenTimeClient: screenTimeClient,
+                    userDefaultsClient: userDefaultsClient
                 )
             }
         }
@@ -70,6 +78,7 @@ struct RootView: View {
             notionClient: .testValue,
             notionAuthClient: .testValue
         ),
-        screenTimeClient: .testValue
+        screenTimeClient: .testValue,
+        userDefaultsClient: .testValue
     )
 }
