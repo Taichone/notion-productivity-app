@@ -13,7 +13,6 @@ struct TimerView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var router: NavigationRouter
     @State private var viewModel: TimerViewModel
-    
     private let focusColor: Color
     private let breakColor: Color
     
@@ -32,7 +31,7 @@ struct TimerView: View {
         VStack {
             VStack(alignment: .leading) {
                 HStack {
-                    Text(viewModel.timerModeName)
+                    Text(viewModel.timerMode.name)
                 }
                 
                 Divider()
@@ -136,6 +135,19 @@ extension TimerView {
         let breakTimeSec: Int
         let focusColor: Color
         let breakColor: Color
+    }
+}
+
+extension TimerViewModel.Mode {
+    var name: String {
+        switch self {
+            case .focusMode:
+                String(moduleLocalized: "focus-mode")
+            case .breakMode:
+                String(moduleLocalized: "break-mode")
+            case .additionalFocusMode:
+                String(moduleLocalized: "additional-focus-mode")
+        }
     }
 }
 

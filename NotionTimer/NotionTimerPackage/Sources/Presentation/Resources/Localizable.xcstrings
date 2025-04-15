@@ -13,25 +13,15 @@
     "%lld" : {
 
     },
-    "additional-focus-mode" : {
-      "extractionState" : "stale",
+    "appearance-settings" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Additional Focus Mode"
-          }
-        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "集中継続モード"
+            "value" : "見た目のカスタマイズ"
           }
         }
       }
-    },
-    "appearance-settings" : {
-
     },
     "authorize-notion" : {
       "localizations" : {
@@ -39,23 +29,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notionにログインする"
-          }
-        }
-      }
-    },
-    "break-mode" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Break Mode"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "休憩モード"
           }
         }
       }
@@ -215,23 +188,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "集中時間の記録に用いるデータベースを選択してください。記録に用いるプロパティを全て持つデータベースがあればここに表示されます。記録に用いるプロパティは、Dateの「Date」、Multi-selectの「Tag」、Textの「Description」、Numberの「Time」の4つです。"
-          }
-        }
-      }
-    },
-    "focus-mode" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Focus Mode"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "集中モード"
           }
         }
       }

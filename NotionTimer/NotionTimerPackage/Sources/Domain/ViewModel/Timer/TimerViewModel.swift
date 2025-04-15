@@ -184,8 +184,8 @@ extension TimerViewModel {
     }
 }
 
-extension TimerViewModel {
-    public enum Mode {
+public extension TimerViewModel {
+    enum Mode {
         case focusMode
         case breakMode
         case additionalFocusMode
