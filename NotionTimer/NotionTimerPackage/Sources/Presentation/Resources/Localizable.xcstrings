@@ -13,6 +13,16 @@
     "%lld" : {
 
     },
+    "additional-focus-mode" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "追加集中モード"
+          }
+        }
+      }
+    },
     "appearance-settings" : {
       "localizations" : {
         "ja" : {
@@ -29,6 +39,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notionにログインする"
+          }
+        }
+      }
+    },
+    "break-mode" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休憩モード"
           }
         }
       }
@@ -188,6 +208,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "集中時間の記録に用いるデータベースを選択してください。記録に用いるプロパティを全て持つデータベースがあればここに表示されます。記録に用いるプロパティは、Dateの「Date」、Multi-selectの「Tag」、Textの「Description」、Numberの「Time」の4つです。"
+          }
+        }
+      }
+    },
+    "focus-mode" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "集中モード"
           }
         }
       }
