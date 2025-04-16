@@ -4,9 +4,7 @@
 //
 //  Created by Taichi on 2024/08/16
 
-import Foundation
 import DataLayer
-import Observation
 import SwiftUI
 
 // TODO: Observable を積極検討
@@ -186,8 +184,8 @@ extension TimerViewModel {
     }
 }
 
-extension TimerViewModel {
-    public enum Mode {
+public extension TimerViewModel {
+    enum Mode {
         case focusMode
         case breakMode
         case additionalFocusMode

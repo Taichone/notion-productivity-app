@@ -12,7 +12,6 @@ import Domain
 struct DatabaseSelectionView: View {
     let notionService: NotionService
     
-    @Environment(\.appServices) var appServices
     @State private var isLoading = true
     @State private var databases: [NotionDatabase] = []
     @State private var selectedDatabase: NotionDatabase?
@@ -21,7 +20,7 @@ struct DatabaseSelectionView: View {
         ZStack {
             List {
                 NavigationLink {
-                    DatabaseCreationView(notionService: appServices.notionService)
+                    DatabaseCreationView(notionService: notionService)
                 } label: {
                     Text(String(moduleLocalized: "create-database-view-navigation-link"))
                 }

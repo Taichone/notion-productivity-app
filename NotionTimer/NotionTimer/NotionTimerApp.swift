@@ -7,13 +7,14 @@
 
 import SwiftUI
 import Presentation
+import Domain
 
 @main
 struct NotionTimerApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    
     var body: some Scene {
-        WindowGroup {
-            RootView()
-        }
+        RootScene()
     }
 }
 

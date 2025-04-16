@@ -11,24 +11,28 @@ import DataLayer
 import Domain
 
 struct RecordDisplayView: View {
-    let notionService: NotionService
-    
-    @State private var records: [Record] = []
-    @State private var isLoading = true
+    @State private var viewModel: RecordDisplayViewModel
     private let chartViewID = UUID()
+    
+    init(notionService: NotionService) {
+        self.viewModel = RecordDisplayViewModel(notionService: notionService)
+    }
     
     var body: some View {
         ZStack {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     Chart {
-                        ForEach(records) { record in
+                        ForEach(viewModel.records) { record in
                             BarMark(
                                 x: .value("Date", record.date, unit: .day),
                                 y: .value("Time", record.time)
                             )
                             .foregroundStyle(LinearGradient(
-                                gradient: Gradient(colors: tagColors(from: record)),
+                                gradient: Gradient(
+                                    colors: viewModel.tagColors(from: record)
+                                        .map { $0.color } // [NotionTag.Color] -> [Color]
+                                ),
                                 startPoint: .top,
                                 endPoint: .bottom
                             ))
@@ -39,43 +43,17 @@ struct RecordDisplayView: View {
                     }
                     .frame(height: 200)
                     .padding()
-                    .frame(width: chartViewWidth)
+                    .frame(width: viewModel.chartViewWidth)
                     .id(chartViewID)
                 }
                 .task {
-                    await fetchAllRecords()
+                    await viewModel.fetchAllRecords()
                     proxy.scrollTo(chartViewID, anchor: .trailing) // 右端へスクロール
                 }
             }
             
             CommonLoadingView()
-                .hidden(!isLoading)
-        }
-    }
-    
-    private var chartViewWidth: CGFloat {
-        let uniqueDates = Set(records.map { record in
-            Calendar.current.startOfDay(for: record.date)
-        })
-        
-        return CGFloat(uniqueDates.count * 100)
-    }
-    
-    private func tagColors(from record: Record) -> [Color] {
-        var colors = record.tags.map { $0.color.color }
-        if colors.isEmpty {
-            colors.append(NotionTag.Color.default.color)
-        }
-        return colors
-    }
-    
-    private func fetchAllRecords() async {
-        do {
-            isLoading = true
-            records = try await notionService.getAllRecords()
-            isLoading = false
-        } catch {
-            debugPrint("ERROR: 記録の取得に失敗") // TODO: ハンドリング
+                .hidden(!viewModel.isLoading)
         }
     }
 }

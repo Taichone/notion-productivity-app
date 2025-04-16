@@ -13,7 +13,6 @@ struct TimerView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var router: NavigationRouter
     @State private var viewModel: TimerViewModel
-    
     private let focusColor: Color
     private let breakColor: Color
     
@@ -21,7 +20,7 @@ struct TimerView: View {
         self.focusColor = dependency.focusColor
         self.breakColor = dependency.breakColor
         self.viewModel = .init(
-            isManualBreakStartEnabled: dependency.isManualBreakStartEnabled,
+            isManualBreakStartEnabled: dependency.manualBreakStartIsEnabled,
             focusTimeSec: dependency.focusTimeSec,
             breakTimeSec: dependency.breakTimeSec,
             screenTimeClient: ScreenTimeClient.liveValue
@@ -32,7 +31,7 @@ struct TimerView: View {
         VStack {
             VStack(alignment: .leading) {
                 HStack {
-                    Text(viewModel.timerModeName)
+                    Text(viewModel.timerMode.name)
                 }
                 
                 Divider()
@@ -130,8 +129,8 @@ struct TimerView: View {
 
 extension TimerView {
     struct Dependency: Hashable {
-        let isBreakEndSoundEnabled: Bool
-        let isManualBreakStartEnabled: Bool
+        let breakEndSoundIsEnabled: Bool
+        let manualBreakStartIsEnabled: Bool
         let focusTimeSec: Int
         let breakTimeSec: Int
         let focusColor: Color
@@ -139,11 +138,24 @@ extension TimerView {
     }
 }
 
+extension TimerViewModel.Mode {
+    var name: String {
+        switch self {
+            case .focusMode:
+                String(moduleLocalized: "focus-mode")
+            case .breakMode:
+                String(moduleLocalized: "break-mode")
+            case .additionalFocusMode:
+                String(moduleLocalized: "additional-focus-mode")
+        }
+    }
+}
+
 #Preview {
     NavigationStack {
         TimerView(dependency: .init(
-            isBreakEndSoundEnabled: true,
-            isManualBreakStartEnabled: true,
+            breakEndSoundIsEnabled: true,
+            manualBreakStartIsEnabled: true,
             focusTimeSec: 1500,
             breakTimeSec: 300,
             focusColor: .mint,

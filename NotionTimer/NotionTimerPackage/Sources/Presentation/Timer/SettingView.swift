@@ -10,8 +10,12 @@ import DataLayer
 import Domain
 
 struct SettingView: View {
-    let notionService: NotionService
+    @State private var viewModel: SettingViewModel
     @EnvironmentObject var router: NavigationRouter
+    
+    init(notionService: NotionService) {
+        self.viewModel = .init(notionService: notionService)
+    }
     
     var body: some View {
         List {
@@ -19,7 +23,7 @@ struct SettingView: View {
                 content: {
                     Button {
                         Task {
-                            await notionService.releaseSelectedDatabase()
+                            await viewModel.reselectDatabase()
                             router.items.removeAll()
                         }
                     } label: {
@@ -35,7 +39,7 @@ struct SettingView: View {
                 content: {
                     Button {
                         Task {
-                            await notionService.releaseAccessToken()
+                            await viewModel.logout()
                             router.items.removeAll()
                         }
                     } label: {

@@ -14,24 +14,24 @@
 
     },
     "additional-focus-mode" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Additional Focus Mode"
-          }
-        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "集中継続モード"
+            "value" : "追加集中モード"
           }
         }
       }
     },
     "appearance-settings" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "見た目のカスタマイズ"
+          }
+        }
+      }
     },
     "authorize-notion" : {
       "localizations" : {
@@ -44,14 +44,7 @@
       }
     },
     "break-mode" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Break Mode"
-          }
-        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -220,14 +213,7 @@
       }
     },
     "focus-mode" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Focus Mode"
-          }
-        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
