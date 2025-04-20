@@ -13,6 +13,8 @@ import SwiftUI
     let isManualBreakStartEnabled: Bool
     let focusTimeSec: Int
     let breakTimeSec: Int
+    let focusColor: Color
+    let breakColor: Color
     let screenTimeClient: ScreenTimeClient
     let appSelection: AppSelection?
     
@@ -26,7 +28,7 @@ import SwiftUI
     
     // UI related properties
     public var modeColor: Color {
-        timerMode == .focusMode ? .mint : .pink
+        timerMode == .focusMode ? focusColor : breakColor
     }
     
     public var trimTo: CGFloat {
@@ -69,12 +71,16 @@ import SwiftUI
         isManualBreakStartEnabled: Bool,
         focusTimeSec: Int,
         breakTimeSec: Int,
+        focusColor: Color,
+        breakColor: Color,
         screenTimeClient: ScreenTimeClient,
         appSelection: AppSelection? = nil
     ) {
         self.isManualBreakStartEnabled = isManualBreakStartEnabled
         self.focusTimeSec = focusTimeSec
         self.breakTimeSec = breakTimeSec
+        self.focusColor = focusColor
+        self.breakColor = breakColor
         self.screenTimeClient = screenTimeClient
         self.appSelection = appSelection
         

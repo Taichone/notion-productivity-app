@@ -13,16 +13,14 @@ struct TimerView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var router: NavigationRouter
     @State private var viewModel: TimerViewModel
-    private let focusColor: Color
-    private let breakColor: Color
     
     init(dependency: Dependency) {
-        self.focusColor = dependency.focusColor
-        self.breakColor = dependency.breakColor
         self.viewModel = .init(
             isManualBreakStartEnabled: dependency.manualBreakStartIsEnabled,
             focusTimeSec: dependency.focusTimeSec,
             breakTimeSec: dependency.breakTimeSec,
+            focusColor: dependency.focusColor,
+            breakColor: dependency.breakColor,
             screenTimeClient: ScreenTimeClient.liveValue
         )
     }
