@@ -8,22 +8,10 @@
 import SwiftUI
 
 struct TimerCircle: View {
-    private let trimFrom: CGFloat
-    private let trimTo: CGFloat
-    private let color: Color
-    private let strokeWidth: CGFloat
-    
-    init(
-        color: Color,
-        trimFrom: CGFloat = 0.0,
-        trimTo: CGFloat = 1.0,
-        strokeWidth: CGFloat = 80
-    ) {
-        self.color = color
-        self.trimFrom = trimFrom
-        self.trimTo = trimTo
-        self.strokeWidth = strokeWidth
-    }
+    let trimFrom: CGFloat
+    let trimTo: CGFloat
+    let color: Color
+    let strokeWidth: CGFloat
     
     var body: some View {
         Circle()
@@ -37,6 +25,26 @@ struct TimerCircle: View {
                 )
             )
             .scaledToFit()
+            .padding(strokeWidth / 2)
+    }
+    
+    static func background(color: Color, strokeWidth: CGFloat) -> Self {
+        .init(
+            trimFrom: 0,
+            trimTo: 1,
+            color: color,
+            strokeWidth: strokeWidth
+        )
+    }
+}
+
+struct TimerCenterCircle: View {
+    let color: Color
+    let strokeWidth: CGFloat
+    
+    var body: some View {
+        Circle()
+            .fill(color)
             .padding(strokeWidth)
     }
 }
