@@ -1,10 +1,3 @@
-//
-//  NotionService.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/11/03.
-//
-
 import Foundation
 import Observation
 import DataLayer

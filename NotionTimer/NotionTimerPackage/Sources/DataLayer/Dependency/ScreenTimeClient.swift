@@ -1,10 +1,3 @@
-//
-//  ScreenTimeClient.swift
-//  NotionTimer
-//
-//  Created by Taichi on 2024/08/19.
-//
-
 import FamilyControls
 import ManagedSettings
 

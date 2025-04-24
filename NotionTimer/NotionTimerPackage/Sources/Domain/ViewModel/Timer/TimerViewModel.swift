@@ -1,10 +1,3 @@
-//
-//  TimerViewService.swift
-//  NotionTimer
-//
-//  Created by Taichi on 2024/08/16
-
-import DataLayer
 import SwiftUI
 
 // TODO: Observable を積極検討
@@ -14,51 +7,43 @@ import SwiftUI
     let focusTimeSec: Int
     let breakTimeSec: Int
     let focusColor: Color
-    let breakColor: Color
+    public let breakColor: Color
     let screenTimeClient: ScreenTimeClient
     let appSelection: AppSelection?
     
-    // Timer status
+    // Timer States
     var timer: Timer?
     public var timerMode: Mode
-    public var maxTimeSec: Int = 0
-    public var remainingTimeSec: Int = 0
-    public var isRunning = false
-    public var totalFocusTimeSec: Int = 0
-    
-    // UI related properties
+    public var maxTimeSec: Int
+    public var remainingTimeSec: Int
+    public var isRunning: Bool
+    public var totalFocusTimeSec: Int
+
+    // UI Related Stetes
     public var modeColor: Color {
         timerMode == .focusMode ? focusColor : breakColor
     }
-    
     public var trimTo: CGFloat {
         timerMode == .breakMode ? CGFloat(1 - (CGFloat(remainingTimeSec) / CGFloat(maxTimeSec))) : 1
     }
-    
     public var trimFrom: CGFloat {
         timerMode == .breakMode ? 0 : CGFloat(1 - (CGFloat(remainingTimeSec) / CGFloat(maxTimeSec)))
     }
-    
     public var remainingTimeString: String {
         "\(remainingTimeSec / 60):\(String(format: "%02d", remainingTimeSec % 60))"
     }
-    
     public var totalFocusTimeString: String {
         "\(totalFocusTimeSec / 60):\(String(format: "%02d", totalFocusTimeSec % 60))"
     }
-    
     public var timerButtonSystemName: String {
         isRunning ? "pause.fill" : "play.fill"
     }
-    
     public var startBreakButtonDisabled: Bool {
         timerMode != .additionalFocusMode
     }
-    
     public var totalFocusTimeDisplayColor: Color {
         timerMode == .additionalFocusMode ? .mint : Color(.label)
     }
-    
     public var timerModeName: String {
         switch timerMode {
         case .focusMode: "focus-mode"
@@ -74,7 +59,13 @@ import SwiftUI
         focusColor: Color,
         breakColor: Color,
         screenTimeClient: ScreenTimeClient,
-        appSelection: AppSelection? = nil
+        appSelection: AppSelection? = nil,
+        timer: Timer? = nil,
+        timerMode: Mode = .focusMode,
+        maxTimeSec: Int? = nil,
+        remainingTimeSec: Int? = nil,
+        isRunning: Bool = false,
+        totalFocusTimeSec: Int = 0
     ) {
         self.isManualBreakStartEnabled = isManualBreakStartEnabled
         self.focusTimeSec = focusTimeSec
@@ -84,10 +75,12 @@ import SwiftUI
         self.screenTimeClient = screenTimeClient
         self.appSelection = appSelection
         
-        // 集中時間から開始
-        timerMode = .focusMode
-        maxTimeSec = focusTimeSec
-        remainingTimeSec = focusTimeSec
+        self.timer = timer
+        self.timerMode = timerMode
+        self.maxTimeSec = maxTimeSec ?? focusTimeSec
+        self.remainingTimeSec = remainingTimeSec ?? focusTimeSec
+        self.isRunning = isRunning
+        self.totalFocusTimeSec = totalFocusTimeSec
     }
 }
 

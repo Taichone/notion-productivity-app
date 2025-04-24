@@ -1,10 +1,3 @@
-//
-//  RootView.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/10/20.
-//
-
 import SwiftUI
 import DataLayer
 import Domain

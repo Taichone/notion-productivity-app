@@ -1,10 +1,3 @@
-//
-//  RootViewModel.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2025/04/09.
-//
-
 import Foundation
 import Observation
 import DataLayer

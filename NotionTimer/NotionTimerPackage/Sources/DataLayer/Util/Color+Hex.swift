@@ -1,10 +1,3 @@
-//
-//  Color+InitWithHex.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2025/04/15.
-//
-
 import SwiftUI
 
 public extension Color {

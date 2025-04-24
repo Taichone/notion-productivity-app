@@ -1,10 +1,3 @@
-//
-//  KeychainClient.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/11/02.
-//
-
 import Security
 import Foundation
 

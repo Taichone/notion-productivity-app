@@ -1,10 +1,3 @@
-//
-//  nini.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2025/04/02.
-//
-
 public enum NotionServiceError: Error {
     case failedToSaveToKeychain
     case failedToRetrieveTokenFromKeychain

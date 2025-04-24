@@ -1,10 +1,3 @@
-//
-//  NotionPage.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/11/18.
-//
-
 import Foundation
 
 public struct NotionPage: Sendable, Identifiable, Hashable {

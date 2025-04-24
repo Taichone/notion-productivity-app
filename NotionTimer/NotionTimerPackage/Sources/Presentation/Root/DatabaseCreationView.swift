@@ -1,10 +1,3 @@
-//
-//  DatabaseCreationView.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/11/16.
-//
-
 import SwiftUI
 import DataLayer
 import Domain

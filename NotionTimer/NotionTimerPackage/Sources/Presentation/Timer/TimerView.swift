@@ -1,10 +1,3 @@
-//
-//  TimerView.swift
-//  NotionTimer
-//
-//  Created by Taichi on 2024/08/13.
-//
-
 import SwiftUI
 import DataLayer
 import Domain
@@ -23,6 +16,10 @@ struct TimerView: View {
             breakColor: dependency.breakColor,
             screenTimeClient: ScreenTimeClient.liveValue
         )
+    }
+    
+    init(viewModel: TimerViewModel) {
+        self.viewModel = viewModel
     }
     
     var body: some View {
@@ -56,30 +53,46 @@ struct TimerView: View {
             Spacer()
             
             ZStack {
-                TimerCircle(color: Color(.secondarySystemBackground))
+                TimerCircle.background(
+                    color: Color(.secondarySystemBackground),
+                    strokeWidth: 80
+                )
+                
                 TimerCircle(
-                    color: viewModel.modeColor,
                     trimFrom: viewModel.trimFrom,
-                    trimTo: viewModel.trimTo
+                    trimTo: viewModel.trimTo,
+                    color: viewModel.modeColor,
+                    strokeWidth: 80
                 )
                 .animation(.smooth, value: viewModel.trimFrom)
                 .animation(.smooth, value: viewModel.trimTo)
                 .rotationEffect(Angle(degrees: -90))
                 .shadow(radius: 10)
+                
+                Button {
+                    ExternalOutput.tapticFeedback(style: .heavy)
+                    viewModel.tapBreakStartButton()
+                } label: {
+                    ZStack {
+                        TimerCenterCircle(
+                            color: viewModel.breakColor,
+                            strokeWidth: 80
+                        )
+                        Text(String(moduleLocalized: "start-break")).bold()
+                            .foregroundStyle(Color(.label))
+                            .shadow(
+                                color: Color(.systemBackground),
+                                radius: 5
+                            )
+                    }
+                }
+                .hidden(viewModel.startBreakButtonDisabled)
             }
             
             Spacer()
             
             Button {
-                ExternalOutput.tapticFeedback()
-                viewModel.tapBreakStartButton()
-            } label: {
-                Text(String(moduleLocalized: "start-break")).bold()
-            }
-            .hidden(viewModel.startBreakButtonDisabled)
-            
-            Button {
-                ExternalOutput.tapticFeedback()
+                ExternalOutput.tapticFeedback(style: .light)
                 viewModel.tapPlayButton()
             } label: {
                 Image(systemName: viewModel.timerButtonSystemName)
@@ -151,13 +164,22 @@ extension TimerViewModel.Mode {
 
 #Preview {
     NavigationStack {
-        TimerView(dependency: .init(
-            breakEndSoundIsEnabled: true,
-            manualBreakStartIsEnabled: true,
-            focusTimeSec: 1500,
-            breakTimeSec: 300,
-            focusColor: .mint,
-            breakColor: .pink
-        ))
+        TimerView(
+            viewModel: .init(
+                isManualBreakStartEnabled: true,
+                focusTimeSec: 60,
+                breakTimeSec: 60,
+                focusColor: .red,
+                breakColor: .blue,
+                screenTimeClient: .liveValue,
+                appSelection: nil,
+                timer: nil,
+                timerMode: .additionalFocusMode,
+                maxTimeSec: 60,
+                remainingTimeSec: 0,
+                isRunning: true,
+                totalFocusTimeSec: 0
+            )
+        )
     }
 }

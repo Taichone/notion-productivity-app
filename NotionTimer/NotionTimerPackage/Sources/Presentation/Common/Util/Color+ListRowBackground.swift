@@ -1,10 +1,3 @@
-//
-//  Color+ListRowBackground.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/12/04.
-//
-
 import SwiftUI
 
 extension Color {

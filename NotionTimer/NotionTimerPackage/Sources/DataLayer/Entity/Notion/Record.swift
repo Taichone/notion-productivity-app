@@ -1,10 +1,3 @@
-//
-//  Record.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/12/02.
-//
-
 import Foundation
 
 public struct Record: Identifiable, Hashable, Sendable {

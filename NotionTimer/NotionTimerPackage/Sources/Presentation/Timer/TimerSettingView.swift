@@ -1,10 +1,3 @@
-//
-//  SetTimerView.swift
-//  NotionTimer
-//
-//  Created by Taichi on 2024/08/13.
-//
-
 import SwiftUI
 import DataLayer
 import Domain
