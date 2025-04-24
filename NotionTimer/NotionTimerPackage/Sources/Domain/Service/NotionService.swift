@@ -67,28 +67,39 @@ public actor NotionService {
         _authStatus = .complete
     }
     
-    public func releaseAccessToken() async {
-        guard keychainClient.deleteToken(.notionAccessToken),
-              keychainClient.deleteToken(.notionDatabaseID) else {
-            fatalError("Keychain からトークンを削除できない")
+    public func releaseAccessToken() async throws {
+        defer {
+            _authStatus = .invalidToken
         }
-        
-        _authStatus = .invalidToken
+        guard keychainClient.deleteToken(.notionAccessToken) else {
+            throw NotionServiceError.failedToDeleteAccessTokenFromKeychain
+        }
     }
     
-    public func releaseSelectedDatabase() async {
-        guard keychainClient.deleteToken(.notionDatabaseID) else {
-            fatalError("Keychain からトークンを削除できない")
+    public func releaseAccessTokenAndDatabase() async throws {
+        defer {
+            _authStatus = .invalidToken
         }
-        
-        _authStatus = .invalidDatabase
+        guard keychainClient.deleteToken(.notionAccessToken),
+              keychainClient.deleteToken(.notionDatabaseID) else {
+            throw NotionServiceError.failedToDeleteAccessTokenFromKeychain
+        }
+    }
+    
+    public func releaseDatabase() async throws {
+        defer {
+            _authStatus = .invalidDatabase
+        }
+        guard keychainClient.deleteToken(.notionDatabaseID) else {
+            throw NotionServiceError.failedToDeleteDatabaseIDFromKeychain
+        }
     }
 }
 
 extension NotionService {
     private func token() async throws -> String {
         guard let token = await accessToken else {
-            throw NotionServiceError.failedToRetrieveTokenFromKeychain
+            throw NotionServiceError.failedToReadAccessTokenFromKeychain
         }
         return token
     }

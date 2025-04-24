@@ -9,11 +9,21 @@ import Observation
     }
     
     public func reselectDatabase() async {
-        await notionService.releaseSelectedDatabase()
+        do {
+            try await notionService.releaseDatabase()
+        } catch {
+            // TODO: ハンドリング
+            debugPrint(error)
+        }
     }
     
     public func logout() async {
-        await notionService.releaseAccessToken()
+        do {
+            try await notionService.releaseAccessTokenAndDatabase()
+        } catch {
+            // TODO: ハンドリング
+            debugPrint(error)
+        }
     }
 }
 

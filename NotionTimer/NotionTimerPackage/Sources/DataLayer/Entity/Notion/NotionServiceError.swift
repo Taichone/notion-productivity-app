@@ -1,7 +1,10 @@
 public enum NotionServiceError: Error {
     case failedToSaveToKeychain
-    case failedToRetrieveTokenFromKeychain
+    case failedToReadAccessTokenFromKeychain
+    case failedToReadDatabaseIDFromKeychain
     case failedToFetchAccessToken
+    case failedToDeleteAccessTokenFromKeychain
+    case failedToDeleteDatabaseIDFromKeychain
     case accessTokenNotFound
     case invalidClient
     case invalidDatabase

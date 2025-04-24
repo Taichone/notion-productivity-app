@@ -45,7 +45,9 @@ struct RootView: View {
             case .invalidToken:
                 LoginView()
             case .invalidDatabase:
-                DatabaseSelectionView(notionService: notionService)
+                NavigationStack {
+                    DatabaseSelectionView(notionService: notionService)
+                }
             case .complete:
                 HomeView(
                     notionService: notionService,

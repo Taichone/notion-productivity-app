@@ -9,9 +9,7 @@ struct LoginView: View {
     var body: some View {
         // TODO: ログインの流れを説明する
         VStack {
-            Button {
-                UIApplication.shared.open(Self.notionLoginPageURL)
-            } label: {
+            Link(destination: Self.notionLoginPageURL) {
                 Text(String(moduleLocalized: "authorize-notion"))
                     .padding()
                     .background {

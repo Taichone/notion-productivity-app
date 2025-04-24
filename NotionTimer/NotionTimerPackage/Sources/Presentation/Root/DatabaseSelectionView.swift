@@ -49,6 +49,16 @@ struct DatabaseSelectionView: View {
             await fetchDatabases()
         }
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    Task {
+                        try await notionService.releaseAccessToken()
+                    }
+                } label: {
+                    Text(String(moduleLocalized: "logout"))
+                }
+            }
+            
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     Task { await fetchDatabases() }
