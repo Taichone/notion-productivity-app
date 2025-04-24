@@ -2,31 +2,31 @@ import Foundation
 import Alamofire
 
 public struct NotionAuthClient: DependencyClient {
-    public var getAccessToken: @Sendable (String) async throws -> String
+    public var fetchAccessToken: @Sendable (String) async throws -> String
     
     public static let liveValue = Self(
-        getAccessToken: getAccessToken
+        fetchAccessToken: fetchAccessToken
     )
     
     public static let testValue = Self(
-        getAccessToken: { _ in "" }
+        fetchAccessToken: { _ in "" }
     )
 }
 
 extension NotionAuthClient {
-    private struct GetAccessTokenRequestBody: Encodable {
+    private struct FetchAccessTokenRequestBody: Encodable {
         let code: String
     }
     
-    private struct GetAccessTokenResponseBody: Decodable {
+    private struct FetchAccessTokenResponseBody: Decodable {
         let accessToken: String
     }
     
     /// temporaryToken から accessToken を取得
-    private static func getAccessToken(temporaryToken: String) async throws -> String {
+    private static func fetchAccessToken(temporaryToken: String) async throws -> String {
         let endPoint = "https://ft52ipjcsrdyyzviuos2pg6loi0ejzdv.lambda-url.ap-northeast-1.on.aws/"
         let headers: HTTPHeaders = ["Content-Type": "application/json"]
-        let requestBody = GetAccessTokenRequestBody(code: temporaryToken)
+        let requestBody = FetchAccessTokenRequestBody(code: temporaryToken)
         
         do {
             let response = try await AF.request(
@@ -37,7 +37,7 @@ extension NotionAuthClient {
                 headers: headers
             )
                 .validate()
-                .serializingDecodable(GetAccessTokenResponseBody.self, decoder: JSONDecoder.snakeCase).value
+                .serializingDecodable(FetchAccessTokenResponseBody.self, decoder: JSONDecoder.snakeCase).value
             
             return response.accessToken
         } catch {

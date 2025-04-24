@@ -8,22 +8,8 @@ public actor NotionService {
     private let notionClient: NotionAPIClient
     private let notionAuthClient: NotionAuthClient
     
-    private var accessToken: String? {
-        get async {
-            keychainClient.retrieveToken(.notionAccessToken)
-        }
-    }
-    private var databaseID: String? {
-        get async {
-            keychainClient.retrieveToken(.notionDatabaseID)
-        }
-    }
-    
-    private var _authStatus: NotionAuthStatus = .invalidToken
-    public var authStatus: NotionAuthStatus {
-        get { _authStatus }
-        set { _authStatus = newValue }
-    }
+    // State
+    public var authStatus: NotionAuthStatus = .invalidToken
     
     public init(
         keychainClient: KeychainClient,
@@ -35,9 +21,17 @@ public actor NotionService {
         self.notionAuthClient = notionAuthClient
     }
     
+    private func accessToken() async -> String? {
+        keychainClient.retrieveToken(.notionAccessToken)
+    }
+    
+    private func databaseID() async -> String? {
+        keychainClient.retrieveToken(.notionDatabaseID)
+    }
+    
     public func fetchAccessToken(temporaryToken: String) async throws {
         do {
-            let accessToken = try await notionAuthClient.getAccessToken(temporaryToken)
+            let accessToken = try await notionAuthClient.fetchAccessToken(temporaryToken)
             guard keychainClient.saveToken(accessToken, .notionAccessToken) else {
                 throw NotionServiceError.failedToSaveToKeychain
             }
@@ -50,17 +44,17 @@ public actor NotionService {
     
     public func updateAuthStatus() async {
         guard await accessToken != nil else {
-            _authStatus = .invalidToken
+            authStatus = .invalidToken
             return
         }
         
         guard await databaseID != nil else {
-            _authStatus = .invalidDatabase
+            authStatus = .invalidDatabase
             return
         }
         
         // TODO: token, databaseID の有効チェック
-        _authStatus = .complete
+        authStatus = .complete
     }
     
     public func releaseAccessToken() async throws {
