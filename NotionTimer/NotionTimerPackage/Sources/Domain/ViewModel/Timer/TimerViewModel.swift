@@ -1,10 +1,3 @@
-//
-//  TimerViewService.swift
-//  NotionTimer
-//
-//  Created by Taichi on 2024/08/16
-
-import DataLayer
 import SwiftUI
 
 // TODO: Observable を積極検討

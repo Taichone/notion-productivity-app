@@ -1,10 +1,3 @@
-//
-//  ConditionalHiddenModifier.swift
-//  NotionTimer
-//
-//  Created by Taichi on 2024/08/21.
-//
-
 import SwiftUI
 
 struct ConditionalHiddenModifier: ViewModifier {

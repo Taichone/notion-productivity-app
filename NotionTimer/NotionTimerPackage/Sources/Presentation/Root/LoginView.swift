@@ -1,10 +1,3 @@
-//
-//  AuthView.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/11/14.
-//
-
 import SwiftUI
 import DataLayer
 
