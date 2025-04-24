@@ -1,10 +1,3 @@
-//
-//  RecordView.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/09/29.
-//
-
 import SwiftUI
 import DataLayer
 import Domain

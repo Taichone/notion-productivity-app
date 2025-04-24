@@ -1,10 +1,3 @@
-//
-//  NotionAPIClient.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/12/04.
-//
-
 import Foundation
 @preconcurrency import NotionSwift
 

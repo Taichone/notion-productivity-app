@@ -1,10 +1,3 @@
-//
-//  UserDefaultsRepository.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2025/04/15.
-//
-
 import Foundation
 
 public struct TimerSettingRepository: Sendable {

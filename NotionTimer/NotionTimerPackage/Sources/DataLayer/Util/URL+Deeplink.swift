@@ -1,10 +1,3 @@
-//
-//  URL+Deeplink.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/11/02.
-//
-
 import Foundation
 
 public extension URL {

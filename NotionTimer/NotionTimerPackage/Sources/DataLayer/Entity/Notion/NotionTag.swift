@@ -1,10 +1,3 @@
-//
-//  NotionTag.swift
-//  NotionTimerPackage
-//
-//  Created by Taichi on 2024/11/21.
-//
-
 public struct NotionTag: Identifiable, Hashable, Sendable {
     public let id: String
     public let name: String
