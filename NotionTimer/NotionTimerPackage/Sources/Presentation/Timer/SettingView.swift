@@ -33,6 +33,7 @@ struct SettingView: View {
                     Button {
                         Task {
                             await viewModel.logout()
+                            // FIXME: RootViewModel の authStatus が更新されないのでログイン画面に戻らない
                             router.items.removeAll()
                         }
                     } label: {

@@ -40,8 +40,6 @@ struct RootView: View {
     public var body: some View {
         Group {
             switch viewModel.authStatus {
-            case .loading:
-                CommonLoadingView()
             case .invalidToken:
                 LoginView()
             case .invalidDatabase:

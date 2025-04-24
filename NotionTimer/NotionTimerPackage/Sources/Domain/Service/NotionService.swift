@@ -19,7 +19,7 @@ public actor NotionService {
         }
     }
     
-    private var _authStatus: NotionAuthStatus = .loading
+    private var _authStatus: NotionAuthStatus = .invalidToken
     public var authStatus: NotionAuthStatus {
         get { _authStatus }
         set { _authStatus = newValue }
@@ -36,23 +36,19 @@ public actor NotionService {
     }
     
     public func fetchAccessToken(temporaryToken: String) async throws {
-        _authStatus = .loading
-        
         do {
             let accessToken = try await notionAuthClient.getAccessToken(temporaryToken)
-            
             guard keychainClient.saveToken(accessToken, .notionAccessToken) else {
                 throw NotionServiceError.failedToSaveToKeychain
             }
-            
-            await fetchAuthStatus()
+            await updateAuthStatus()
         } catch {
-            _authStatus = .invalidToken
+            await updateAuthStatus()
             throw error
         }
     }
     
-    public func fetchAuthStatus() async {
+    public func updateAuthStatus() async {
         guard await accessToken != nil else {
             _authStatus = .invalidToken
             return
@@ -68,31 +64,25 @@ public actor NotionService {
     }
     
     public func releaseAccessToken() async throws {
-        defer {
-            _authStatus = .invalidToken
-        }
         guard keychainClient.deleteToken(.notionAccessToken) else {
             throw NotionServiceError.failedToDeleteAccessTokenFromKeychain
         }
+        await updateAuthStatus()
     }
     
     public func releaseAccessTokenAndDatabase() async throws {
-        defer {
-            _authStatus = .invalidToken
-        }
         guard keychainClient.deleteToken(.notionAccessToken),
               keychainClient.deleteToken(.notionDatabaseID) else {
             throw NotionServiceError.failedToDeleteAccessTokenFromKeychain
         }
+        await updateAuthStatus()
     }
     
     public func releaseDatabase() async throws {
-        defer {
-            _authStatus = .invalidDatabase
-        }
         guard keychainClient.deleteToken(.notionDatabaseID) else {
             throw NotionServiceError.failedToDeleteDatabaseIDFromKeychain
         }
+        await updateAuthStatus()
     }
 }
 
@@ -142,7 +132,6 @@ extension NotionService {
         guard keychainClient.saveToken(id, .notionDatabaseID) else {
             throw NotionServiceError.failedToSaveToKeychain
         }
-        _authStatus = .complete
     }
     
     public func record(time: Int, tags: [NotionTag], description: String) async throws {

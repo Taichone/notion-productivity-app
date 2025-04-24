@@ -7,12 +7,12 @@ import DataLayer
     public var authStatus: NotionAuthStatus
     
     public init(notionService: NotionService) {
-        self.authStatus = .loading
+        self.authStatus = .invalidToken
         self.notionService = notionService
     }
     
     public func onAppear() async {
-        await notionService.fetchAuthStatus()
+        await notionService.updateAuthStatus()
         authStatus = await notionService.authStatus
     }
     
@@ -23,7 +23,7 @@ import DataLayer
                 Task {
                     do {
                         try await notionService.fetchAccessToken(temporaryToken: token)
-                        await notionService.fetchAuthStatus()
+                        await notionService.updateAuthStatus()
                         authStatus = await notionService.authStatus
                     } catch {
                         // TODO: アラートを表示（アクセストークンの取得に失敗）
