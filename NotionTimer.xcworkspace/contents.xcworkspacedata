@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "container:NotionTimer/NotionTimer.xcodeproj">
+      location = "group:NotionProductivity/NotionProductivityPackage">
    </FileRef>
    <FileRef
-      location = "container:NotionTimer/NotionTimerPackage">
+      location = "container:NotionProductivity/NotionProductivity.xcodeproj">
    </FileRef>
 </Workspace>

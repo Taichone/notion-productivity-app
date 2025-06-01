@@ -25,7 +25,7 @@ public struct KeychainClient: DependencyClient {
 }
 
 extension KeychainClient {
-    private static let service = "com.taichone.NotionTimer"
+    private static let service = "com.taichone.NotionProductivity"
     
     private static func saveToken(token: String?, type: TokenType) -> Bool {
         var success = true

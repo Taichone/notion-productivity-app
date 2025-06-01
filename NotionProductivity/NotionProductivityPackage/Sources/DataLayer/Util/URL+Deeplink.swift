@@ -6,7 +6,7 @@ public extension URL {
     }
     
     func getDeeplink() -> Deeplink? {
-        guard scheme == "notion-timer",
+        guard scheme == "notion-productivity",
               let host = host,
               let queryUrlComponents = URLComponents(string: absoluteString) else {
             return nil

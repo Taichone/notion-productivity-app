@@ -2,14 +2,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "NotionTimerPackage",
+    name: "NotionProductivityPackage",
     defaultLocalization: "ja",
     platforms: [
         .iOS(.v17),
     ],
     products: [
         .library(
-            name: "NotionTimerPackage",
+            name: "NotionProductivityPackage",
             targets: ["Presentation"]
         ),
     ],

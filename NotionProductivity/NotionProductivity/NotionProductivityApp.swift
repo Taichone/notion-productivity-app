@@ -3,7 +3,7 @@ import Presentation
 import Domain
 
 @main
-struct NotionTimerApp: App {
+struct NotionProductivityApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
     var body: some Scene {

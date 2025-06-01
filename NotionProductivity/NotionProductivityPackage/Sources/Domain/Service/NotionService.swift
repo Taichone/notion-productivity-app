@@ -43,12 +43,12 @@ public actor NotionService {
     }
     
     public func updateAuthStatus() async {
-        guard await accessToken != nil else {
+        guard let _ = await accessToken() else {
             authStatus = .invalidToken
             return
         }
         
-        guard await databaseID != nil else {
+        guard let _ = await databaseID() else {
             authStatus = .invalidDatabase
             return
         }
@@ -82,14 +82,14 @@ public actor NotionService {
 
 extension NotionService {
     private func token() async throws -> String {
-        guard let token = await accessToken else {
+        guard let token = await accessToken() else {
             throw NotionServiceError.failedToReadAccessTokenFromKeychain
         }
         return token
     }
     
     public func getPageList() async throws -> [NotionPage] {
-        guard let token = await accessToken else {
+        guard let token = await accessToken() else {
             throw NotionServiceError.invalidClient
         }
         
@@ -129,7 +129,7 @@ extension NotionService {
     }
     
     public func record(time: Int, tags: [NotionTag], description: String) async throws {
-        guard let databaseID = await databaseID else {
+        guard let databaseID = await databaseID() else {
             throw NotionServiceError.invalidDatabase
         }
         
@@ -144,7 +144,7 @@ extension NotionService {
     }
     
     public func getDatabaseTags() async throws -> [NotionTag] {
-        guard let databaseID = await databaseID else {
+        guard let databaseID = await databaseID() else {
             throw NotionServiceError.invalidDatabase
         }
         
@@ -155,7 +155,7 @@ extension NotionService {
     }
     
     public func getAllRecords() async throws -> [Record] {
-        guard let databaseID = await databaseID else {
+        guard let databaseID = await databaseID() else {
             throw NotionServiceError.invalidDatabase
         }
         

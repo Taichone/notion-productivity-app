@@ -10,10 +10,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>jp.taichone.notion-timer</string>
+			<string>jp.taichone.notion-productivity</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>notion-timer</string>
+				<string>notion-productivity</string>
 			</array>
 		</dict>
 	</array>

@@ -58,6 +58,7 @@ struct RootView: View {
             await viewModel.onAppear()
         }
         .onOpenURL(perform: { url in Task {
+            print(url)
             await viewModel.onOpenURL(url)
         }})
         .animation(.default, value: viewModel.authStatus)
