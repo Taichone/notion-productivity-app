@@ -24,11 +24,7 @@ import Observation
         await fetchNotionStatus()
     }
     
-    public func onAppear() async {
-        await fetchNotionStatus()
-    }
-    
-    private func fetchNotionStatus() async {
+    public func fetchNotionStatus() async {
         notionAccessTokenStatus  = await notionService.accessTokenStatus
         notionTimerRecordingDatabaseStatus = await notionService.timerRecordingDatabaseStatus
     }

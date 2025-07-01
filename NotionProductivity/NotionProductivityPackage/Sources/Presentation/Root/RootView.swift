@@ -72,9 +72,6 @@ struct RootView: View {
         .task {
             await onAppear()
         }
-        .onOpenURL(perform: { url in Task {
-            await onOpenURL(url)
-        }})
     }
     
     private func updateNotionStatus() async {
@@ -84,24 +81,6 @@ struct RootView: View {
     
     private func onAppear() async {
         await updateNotionStatus()
-    }
-    
-    private func onOpenURL(_ url: URL) async {
-        if let deeplink = url.getDeeplink() {
-            switch deeplink {
-            case .notionTemporaryToken(let token):
-                Task {
-                    do {
-                        // TODO: ローディング中 UIを表示
-                        try await notionService.fetchAccessToken(temporaryToken: token)
-                        await notionService.updateAccessTokenStatus()
-                    } catch {
-                        // TODO: アラートを表示（アクセストークンの取得に失敗）
-                        debugPrint(error)
-                    }
-                }
-            }
-        }
     }
 }
 

@@ -9,6 +9,7 @@ import Domain
 
 struct SettingsView: View {
     @State private var viewModel: SettingsViewModel
+    @State private var showingNotionWebView = false
     
     init(notionService: NotionService) {
         self.viewModel = .init(notionService: notionService)
@@ -48,7 +49,9 @@ struct SettingsView: View {
                 } else {
                     Section(
                         content: {
-                            Link(destination: Self.notionLoginPageURL) {
+                            Button {
+                                showingNotionWebView = true
+                            } label: {
                                 Text(String(moduleLocalized: "connect-your-notion"))
                             }
                         },
@@ -61,14 +64,17 @@ struct SettingsView: View {
             .navigationTitle(String(moduleLocalized: "setting-view-navigation-title"))
             .navigationBarTitleDisplayMode(.inline)
             .task {
-                await viewModel.onAppear()
+                await viewModel.fetchNotionStatus()
+            }
+            .sheet(isPresented: $showingNotionWebView) {
+                NotionWebView(notionService: viewModel.notionService) {
+                    await viewModel.fetchNotionStatus()
+                    showingNotionWebView = false
+                }
             }
         }
     }
-    
-    private static let notionLoginPageURL: URL = URL(
-        string: Bundle.main.object(forInfoDictionaryKey: "NOTION_OAUTH_URL") as! String
-    )!
+
 }
 
 #Preview {

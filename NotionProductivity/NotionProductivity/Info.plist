@@ -19,6 +19,12 @@
 	</array>
 	<key>NOTION_OAUTH_URL</key>
 	<string>$(NOTION_OAUTH_URL)</string>
+	<key>SCHEME</key>
+	<string>$(SCHEME)</string>
+	<key>NOTION_REDIRECT_HOST</key>
+	<string>$(NOTION_REDIRECT_HOST)</string>
+	<key>NOTION_REDIRECT_PATH</key>
+	<string>$(NOTION_REDIRECT_PATH)</string>
 	<key>NOTION_TOKEN_EXCHANGE_URL</key>
 	<string>$(NOTION_TOKEN_EXCHANGE_URL)</string>
 </dict>
