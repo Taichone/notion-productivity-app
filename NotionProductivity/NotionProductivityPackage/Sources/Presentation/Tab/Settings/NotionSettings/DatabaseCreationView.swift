@@ -49,7 +49,7 @@ struct DatabaseCreationView: View {
                 )
             }
             
-            CommonLoadingView()
+            LoadingView()
                 .hidden(!viewModel.isLoading)
         }
         .navigationTitle(String(moduleLocalized: "database-creation-view-navigation-title"))

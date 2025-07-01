@@ -41,7 +41,7 @@ struct DatabaseSelectionView: View {
                 )
             }
             
-            CommonLoadingView()
+            LoadingView()
                 .hidden(!viewModel.isLoading)
         }
         .navigationTitle(String(moduleLocalized: "database-selection-view-navigation-title"))

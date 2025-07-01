@@ -58,7 +58,7 @@ struct RecordView: View {
             }
             .environment(\.editMode, .constant(.active))
             
-            CommonLoadingView()
+            LoadingView()
                 .hidden(!viewModel.isLoading)
         }
         .navigationTitle(String(moduleLocalized: "timer-record-view-navigation-title"))
