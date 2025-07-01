@@ -6,14 +6,15 @@ struct NotionWebView: View {
     @Environment(\.dismiss) private var dismiss
     
     private let notionService: NotionService
-    private let notionLoginPageURL: URL
+    private let notionLoginPageURL = URL(string: Bundle.main.object(forInfoDictionaryKey: "NOTION_OAUTH_URL") as! String)!
+    private let scheme: String = Bundle.main.object(forInfoDictionaryKey: "SCHEME") as! String
+    private let redirectHost: String = Bundle.main.object(forInfoDictionaryKey: "NOTION_REDIRECT_HOST") as! String
+    private let redirectPath: String = Bundle.main.object(forInfoDictionaryKey: "NOTION_REDIRECT_PATH") as! String
     private let onAuthenticationComplete: (() async -> Void)?
     
     init(notionService: NotionService, onAuthenticationComplete: (() async -> Void)? = nil) {
         self.notionService = notionService
         self.onAuthenticationComplete = onAuthenticationComplete
-        let oauthURLString = Bundle.main.object(forInfoDictionaryKey: "NOTION_OAUTH_URL") as! String
-        self.notionLoginPageURL = URL(string: oauthURLString)!
     }
     
     var body: some View {
@@ -39,9 +40,16 @@ struct NotionWebView: View {
     }
     
     private func handleURLChange(_ url: URL) async {
-        if let deeplink = url.getDeeplink() {
-            switch deeplink {
-            case .notionTemporaryToken(let token):
+        // DeepLink かチェック
+        if url.scheme == scheme {
+            guard let host = url.host,
+                  let queryUrlComponents = URLComponents(string: url.absoluteString) else {
+                return
+            }
+            
+            // oauth ホストの場合
+            if host == "oauth",
+               let token = queryUrlComponents.queryItems?.first(where: { $0.name == "code" })?.value {
                 do {
                     // TODO: ローディング中 UIを表示
                     try await notionService.fetchAccessToken(temporaryToken: token)
@@ -55,37 +63,25 @@ struct NotionWebView: View {
                     debugPrint(error)
                 }
             }
-        }
-    }
-}
-
-private extension URL {
-    enum Deeplink {
-        case notionTemporaryToken(token: String)
-    }
-    
-    func getDeeplink() -> Deeplink? {
-        let scheme = Bundle.main.object(forInfoDictionaryKey: "SCHEME") as! String
-        guard scheme == scheme,
-              let host = host,
-              let queryUrlComponents = URLComponents(string: absoluteString) else {
-            return nil
+            return
         }
         
-        switch host {
-        case "oauth":
-            if let notionTemporaryToken = queryUrlComponents.getParameterValue(for: "code") {
-                return Deeplink.notionTemporaryToken(token: notionTemporaryToken)
+        // Redirect URL かチェック
+        if url.host == redirectHost,
+           url.path.contains(redirectPath),
+           let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+           let queryItems = components.queryItems,
+           let _ = queryItems.first(where: { $0.name == "code" })?.value {
+            
+            // DeepLink を生成
+            var deepLinkComponents = URLComponents()
+            deepLinkComponents.scheme = scheme
+            deepLinkComponents.host = "oauth"
+            deepLinkComponents.queryItems = queryItems
+            
+            if let deepLinkURL = deepLinkComponents.url {
+                await handleURLChange(deepLinkURL)
             }
-        default:
-            break
         }
-        return nil
-    }
-}
-
-private extension URLComponents {
-    func getParameterValue(for parameter: String) -> String? {
-        queryItems?.first(where: { $0.name == parameter })?.value
     }
 }

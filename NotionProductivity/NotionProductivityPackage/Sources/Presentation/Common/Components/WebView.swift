@@ -22,9 +22,6 @@ struct WebView: UIViewRepresentable {
     
     class Coordinator: NSObject, WKNavigationDelegate {
         let parent: WebView
-        private let scheme = Bundle.main.object(forInfoDictionaryKey: "SCHEME") as! String
-        private let redirectHost = Bundle.main.object(forInfoDictionaryKey: "NOTION_REDIRECT_HOST") as! String
-        private let redirectPath = Bundle.main.object(forInfoDictionaryKey: "NOTION_REDIRECT_PATH") as! String
         
         init(_ parent: WebView) {
             self.parent = parent
@@ -35,18 +32,7 @@ struct WebView: UIViewRepresentable {
             decidePolicyFor navigationAction: WKNavigationAction,
             decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
         ) {
-            
             if let url = navigationAction.request.url {
-                // ディープリンクのスキームをチェック
-                if url.scheme == scheme {
-                    Task { @MainActor in
-                        self.parent.onURLChange(url)
-                    }
-                    decisionHandler(.cancel)
-                    return
-                }
-                
-                // 通常のURL変更もコールバック
                 Task { @MainActor in
                     self.parent.onURLChange(url)
                 }
@@ -56,27 +42,6 @@ struct WebView: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             if let url = webView.url {
-                // Redirect URL のチェック
-                if url.host == redirectHost,
-                   url.path.contains(redirectPath),
-                   let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-                   let queryItems = components.queryItems,
-                   let _ = queryItems.first(where: { $0.name == "code" })?.value {
-                    
-                    // DeepLink を生成
-                    var deepLinkComponents = URLComponents()
-                    deepLinkComponents.scheme = scheme
-                    deepLinkComponents.host = "oauth"
-                    deepLinkComponents.queryItems = queryItems
-                    
-                    if let deepLinkURL = deepLinkComponents.url {
-                        Task { @MainActor in
-                            self.parent.onURLChange(deepLinkURL)
-                        }
-                        return
-                    }
-                }
-                
                 Task { @MainActor in
                     self.parent.onURLChange(url)
                 }
