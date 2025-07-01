@@ -54,7 +54,7 @@ struct RecordDisplayView: View {
                         }
                     }
                     
-                    CommonLoadingView()
+                    LoadingView()
                         .hidden(!viewModel.isLoading)
                 }
             }
