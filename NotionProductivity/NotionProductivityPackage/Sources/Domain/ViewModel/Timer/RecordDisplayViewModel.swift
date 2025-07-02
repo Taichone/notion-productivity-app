@@ -5,7 +5,7 @@ import SwiftUI
 @MainActor @Observable public final class RecordDisplayViewModel {
     private let notionService: NotionService
     public var notionAccessTokenStatus: NotionAccessTokenStatus = .notSelected
-    public var notionTimerRecordingDatabaseStatus: NotionTimerRecordingDatabaseStatus = .notSelected
+    public var notionTimerRecordingDatabaseStatus: NotionDatabaseStatus = .notSelected
     public var records: [Record] = []
     public var isLoading = true
     

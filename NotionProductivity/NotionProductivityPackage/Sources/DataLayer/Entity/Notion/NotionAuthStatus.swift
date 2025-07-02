@@ -3,7 +3,7 @@ public enum NotionAccessTokenStatus: Sendable {
     case selected
 }
 
-public enum NotionTimerRecordingDatabaseStatus: Sendable {
+public enum NotionDatabaseStatus: Sendable {
     case notSelected
     case selected
 }

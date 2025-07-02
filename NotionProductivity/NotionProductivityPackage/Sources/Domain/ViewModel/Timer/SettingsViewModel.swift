@@ -4,7 +4,7 @@ import Observation
 @MainActor @Observable public final class SettingsViewModel {
     public let notionService: NotionService
     public var notionAccessTokenStatus: NotionAccessTokenStatus = .notSelected
-    public var notionTimerRecordingDatabaseStatus: NotionTimerRecordingDatabaseStatus = .notSelected
+    public var notionTimerRecordingDatabaseStatus: NotionDatabaseStatus = .notSelected
     
     public init(notionService: NotionService) {
         self.notionService = notionService

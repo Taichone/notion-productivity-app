@@ -8,8 +8,9 @@ public actor NotionService {
     private let notionClient: NotionAPIClient
     private let notionAuthClient: NotionAuthClient
     
+    // MARK: States
     public var accessTokenStatus: NotionAccessTokenStatus = .notSelected
-    public var timerRecordingDatabaseStatus: NotionTimerRecordingDatabaseStatus = .notSelected
+    public var timerRecordingDatabaseStatus: NotionDatabaseStatus = .notSelected
     
     public init(
         keychainClient: KeychainClient,
@@ -71,6 +72,15 @@ public actor NotionService {
             timerRecordingDatabaseStatus = .selected
         } catch {
             timerRecordingDatabaseStatus = .notSelected
+        }
+    }
+    
+    public func updateFastDatabaseStatus() async {
+        do {
+            let _ = try databaseID()
+            fastDatabaseStatus = .selected
+        } catch {
+            fastDatabaseStatus = .notSelected
         }
     }
 }

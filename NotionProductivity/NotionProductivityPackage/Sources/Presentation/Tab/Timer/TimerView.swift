@@ -7,7 +7,10 @@ struct TimerView: View {
     @EnvironmentObject private var router: NavigationRouter
     @State private var viewModel: TimerViewModel
     
-    init(dependency: Dependency, screenTimeService: ScreenTimeService) {
+    init(
+        dependency: Dependency,
+        screenTimeService: ScreenTimeService
+    ) {
         self.viewModel = .init(
             isManualBreakStartEnabled: dependency.manualBreakStartIsEnabled,
             breakEndSoundIsEnabled: dependency.breakEndSoundIsEnabled,
